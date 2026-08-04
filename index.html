@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html><head><style id="qw-theme">:root {
+  --color-bg: #121218;
+  --color-text: #e4e4ed;
+  --color-navbar-bg: #1a1a24;
+  --color-bg-chat-view: #121218;
+  --color-bg-secondary: #1a1a24;
+  --color-bg-tertiary: #1e1e2a;
+  --color-bg-hover: #2a2a38;
+  --color-surface: #1e1e2a;
+  --color-surface-hover: #2a2a38;
+  --color-surface-active: #353546;
+  --color-border: #ffffff1f;
+  --color-border-light: #ffffff0f;
+  --color-border-strong: #3a3a4e;
+  --color-primary: #8575ff;
+  --color-primary-dark: #4200db;
+  --color-primary-light: #8575ff;
+  --color-primary-bg: color-mix(in srgb, #8575ff 15%, transparent);
+  --color-primary-hover-border: #4200db;
+  --color-nav-icon-active: #8575ff;
+  --color-nav-hover-border: #8575ff;
+  --color-primary-alpha-3: color-mix(in srgb, #8575ff 3%, transparent);
+  --color-primary-alpha-5: color-mix(in srgb, #8575ff 5%, transparent);
+  --color-primary-alpha-8: color-mix(in srgb, #8575ff 8%, transparent);
+  --color-primary-alpha-12: color-mix(in srgb, #8575ff 12%, transparent);
+  --color-primary-alpha-15: color-mix(in srgb, #8575ff 15%, transparent);
+  --color-primary-alpha-20: color-mix(in srgb, #8575ff 20%, transparent);
+  --color-primary-alpha-25: color-mix(in srgb, #8575ff 25%, transparent);
+  --color-primary-alpha-30: color-mix(in srgb, #8575ff 30%, transparent);
+  --color-primary-alpha-40: color-mix(in srgb, #8575ff 40%, transparent);
+  --color-primary-alpha-50: color-mix(in srgb, #8575ff 50%, transparent);
+  --color-primary-alpha-60: color-mix(in srgb, #8575ff 60%, transparent);
+  --color-primary-subtle: color-mix(in srgb, #8575ff 25%, transparent);
+  --color-primary-border: color-mix(in srgb, #8575ff 50%, transparent);
+  --color-focus-ring: color-mix(in srgb, #8575ff 60%, transparent);
+  --color-sidebar-hover: color-mix(in srgb, #8575ff 15%, transparent);
+  --block-hover-outline: 1px dashed color-mix(in srgb, #8575ff 50%, transparent);
+  --block-selected-outline: 1px solid #8575ff;
+  --block-selection-outline-offset: 2px;
+  --block-selected-halo: 0 0 8px color-mix(in srgb, #8575ff 40%, transparent);
+  --color-accent: #8575ff;
+  --color-accent-foreground: #8575ff;
+  --color-accent-dark: #4200db;
+  --color-accent-light: color-mix(in srgb, #8575ff 15%, transparent);
+  --color-accent-inverse: #fff;
+  --color-link: #8575ff;
+  --color-primary-gradient-end: color-mix(in srgb, #8575ff 35%, transparent);
+  --color-primary-bg-solid: #1a1530;
+  --color-user-bubble: #333843;
+  --color-user-bubble-text: #e4e4ed;
+  --color-text-secondary: #a0a0b4;
+  --color-text-tertiary: #8a8a9a;
+  --color-text-muted: #6e6e82;
+  --color-text-on-primary: #fff;
+  --color-success: #4ade80;
+  --color-success-dark: #00802f;
+  --color-success-light: #d9ffd6;
+  --color-success-hover: #005c26;
+  --color-success-bg: #1c2c22;
+  --color-success-border: #0e3d1c;
+  --color-success-foreground: #4ade80;
+  --color-success-dark-foreground: #00802f;
+  --color-success-text: #4ade80;
+  --color-error: #ff6b6b;
+  --color-error-dark: #db0000;
+  --color-error-light: #ffe0e0;
+  --color-error-hover: #3b1a24;
+  --color-error-bg: #3b1a24;
+  --color-error-border: #5e1a24;
+  --color-error-active-border: #db0000;
+  --color-error-foreground: #ff6b6b;
+  --color-error-dark-foreground: #db0000;
+  --color-error-inverse: #fff;
+  --color-error-text: #ff6b6b;
+  --color-warning: #fbbf24;
+  --color-warning-dark: #573a00;
+  --color-warning-light: #fffbbd;
+  --color-warning-hover: #db9200;
+  --color-warning-bg: #3d3520;
+  --color-warning-border: #5e4a1a;
+  --color-warning-foreground: #fbbf24;
+  --color-warning-dark-foreground: #573a00;
+  --color-warning-inverse: #573a00;
+  --color-surface-warning: #fffbbd;
+  --color-text-warning: #573a00;
+  --color-info: #60a5fa;
+  --color-info-dark: #006ce0;
+  --color-info-light: #d1f1ff;
+  --color-info-hover: #003b8f;
+  --color-info-bg: #1a2a42;
+  --color-info-border: #0f3d6e;
+  --color-info-foreground: #60a5fa;
+  --color-info-dark-foreground: #002a66;
+  --color-info-inverse: #fff;
+  --color-overlay: #000000b3;
+  --color-shadow: #0000004d;
+  --color-hover: #ffffff0d;
+  --color-tooltip-bg: #1e1e2af2;
+  --color-tooltip-text: #e4e4ed;
+  --color-voice-purple: #8575ff;
+  --color-voice-purple-dark: #4200db;
+  --color-voice-purple-light: #8575ff;
+  --color-voice-red: #ff6b6b;
+  --color-voice-red-dark: #db0000;
+  --color-voice-amber: #fbbf24;
+  --color-voice-purple-glow: #8575ff66;
+  --color-voice-red-glow: #db000066;
+  --font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
+  --text-2xs: .5625rem;
+  --text-xs: .625rem;
+  --text-sm: .6875rem;
+  --text-base: .75rem;
+  --text-md: .8125rem;
+  --text-lg: .875rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.125rem;
+  --text-3xl: 1.25rem;
+  --text-4xl: 1.5rem;
+  --text-5xl: 2rem;
+  --spacing-1: calc(.25rem * 1);
+  --spacing-1-5: calc(.25rem * 1.5);
+  --spacing-2: calc(.25rem * 2);
+  --spacing-3: calc(.25rem * 3);
+  --spacing-4: calc(.25rem * 4);
+  --spacing-5: calc(.25rem * 5);
+  --spacing-6: calc(.25rem * 6);
+  --spacing-7: calc(.25rem * 7);
+  --spacing-8: calc(.25rem * 8);
+  --spacing-9: calc(.25rem * 9);
+  --spacing-10: calc(.25rem * 10);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-card: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 8px;
+  --shadow-sm: 0 1px 2px #0003;
+  --shadow-md: 0 4px 12px #0000004d;
+  --color-success-bg-solid: #1a3d28;
+  --color-error-bg-solid: #4a2028;
+  --color-error-border-solid: #5e1a24;
+  --color-warning-bg-solid: #4a3a1e;
+  --color-warning-text: #fbbf24;
+  --color-info-bg-solid: #1a3050;
+  --color-info-bg-solid-alt: #222240;
+  --color-info-text: #60a5fa;
+  --color-info-text-alt: #818cf8;
+  --color-emerald: #34d399;
+  --color-teal: #5eead4;
+  --color-code-bg: #1e1e2a;
+  --color-code-header-bg: #252535;
+  --color-code-text: #e4e4ed;
+  --color-code-border: #2e2e3e;
+  --color-code-muted: #6e6e82;
+  --color-inline-code-bg: #1e1e2a;
+  --color-inline-code-text: #e4e4ed;
+  --color-inline-code-border: #2e2e3e;
+  --color-scrollbar-thumb: #3a3a4e;
+  --color-scrollbar-track: transparent;
+  --color-graph-node-text: #e4e4ed;
+  --color-graph-node-text-dim: #6e6e82;
+  --color-graph-edge-default: #6e6e82;
+  --color-graph-edge-cross: #f39c12;
+  --color-graph-edge-text: #a0a0b4;
+  --color-graph-edge-stroke: #1a1a24;
+  --color-graph-highlight-bg: #ff6b6b;
+  --color-graph-highlight-border: #e74c3c;
+  --color-graph-search-bg: gold;
+  --color-graph-search-border: orange;
+  --color-graph-focus-border: #f44;
+  --color-graph-external-border: #6e6e82;
+  --color-graph-cat-file: #5dade2;
+  --color-graph-cat-folder: #aab7b8;
+  --color-graph-cat-file-aggregate: #5499c7;
+  --color-graph-cat-class: #bb8fce;
+  --color-graph-cat-function: #58d68d;
+  --color-graph-cat-method: #48c9b0;
+  --color-graph-cat-variable: #f5b041;
+  --color-graph-cat-import: #eb984e;
+  --color-graph-cat-module: #7e8ce0;
+  --color-graph-cat-concept: #ec7063;
+  --color-graph-cat-person: #ff8a8a;
+  --color-graph-cat-org: #76d7c4;
+  --color-graph-cat-organization: #76d7c4;
+  --color-graph-cat-product: #b8b0fe;
+  --color-graph-cat-metric: #fea0c0;
+  --color-graph-cat-location: #7e9bb5;
+  --color-graph-cat-date: #f092c0;
+  --color-graph-cat-code: #5dade2;
+  --color-graph-cat-doc: #aab7b8;
+  --color-graph-cat-url: #45d6b5;
+  --color-graph-cat-email: #8e7cf7;
+  --color-graph-cat-unknown: #d5dbdb;
+  --color-graph-rel-contains: #d5dbdb;
+  --color-graph-rel-extends: #bb8fce;
+  --color-graph-rel-implements: #5dade2;
+  --color-graph-rel-imports: #eb984e;
+  --color-graph-rel-uses: #58d68d;
+  --color-graph-rel-calls: #52be80;
+  --color-graph-rel-references: #f5b041;
+  --color-graph-rel-related-to: #aab7b8;
+  --color-graph-rel-works-on: #ec7063;
+  --color-graph-rel-owns: #48c9b0;
+  --color-graph-rel-depends-on: #eb984e;
+  --color-graph-rel-parent-of: #d5dbdb;
+  --qs-content: #fff;
+  --qs-main: #fff;
+  --qs-primary-foreground: #131920;
+  --qs-secondary-foreground: #656871;
+  --qs-tertiary-foreground: #6e6e82;
+  --qs-placeholder-foreground: #8c8c94;
+  --qs-divider: #dedee3;
+  --qs-default-border: #8c8c94;
+  --qs-neutral-soft: #b4b4bb;
+  --qs-neutral-gray-50: #1e1e2a;
+  --qs-tertiary-background: #1e1e2a;
+  --qs-action-hover: #f3f3f7;
+  --qs-primary-default: #4200db;
+  --qs-primary-dark: #35009e;
+  --qs-primary-light: #e8e6ff;
+  --qs-success-default: #00802f;
+  --qs-error-default: #db0000;
+  --qs-font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --safe-top: 0px;
+  --safe-bottom: 0px;
+  --safe-left: 0px;
+  --safe-right: 0px;
+  --qs-font-family: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --qs-font-base-letter-spacing: .15px;
+  --qs-shadow-sm: 0 0 2px 0 #00000029, 0 0 4px 0 #00000029;
+  --qs-shadow-md: 0 0 2px 0 #00000029, 0 2px 8px 1px #00000029;
+  --qs-shadow-lg: 0 4px 16px 4px #00000029, 0 2px 6px 1px #00000029;
+  --qs-shadow-xl: 0 4px 8px 2px #00000029, 0 6px 20px 4px #00000029;
+  --qs-width-modal-sm: 384px;
+  --qs-width-modal-md: 600px;
+  --qs-width-modal-lg: 1136px;
+  --qs-grid-gap: 16px;
+  --qs-grid-gap-xl: 24px;
+  --qs-primary-medium: #8575ff;
+  --qs-primary-inverse: #fff;
+  --qs-neutral-lightest: #f9f9fb;
+  --qs-neutral-light: #f3f3f7;
+  --qs-neutral-default: #dedee3;
+  --qs-neutral-medium: #8c8c94;
+  --qs-neutral-deep: #656871;
+  --qs-neutral-dark: #333843;
+  --qs-neutral-strong: #131920;
+  --qs-neutral-white: #fff;
+  --qs-neutral-black: #000;
+  --qs-success-medium: #005c26;
+  --qs-success-dark: #00471e;
+  --qs-success-light: #d9ffd6;
+  --qs-success-inverse: #fff;
+  --qs-info-default: #006ce0;
+  --qs-info-medium: #003b8f;
+  --qs-info-dark: #002a66;
+  --qs-info-light: #d1f1ff;
+  --qs-info-inverse: #fff;
+  --qs-warning-default: #f2b100;
+  --qs-warning-medium: #db9200;
+  --qs-warning-dark: #573a00;
+  --qs-warning-light: #fffbbd;
+  --qs-warning-inverse: #573a00;
+  --qs-warning-experimental: #f2b100;
+  --qs-warning-experimental-light: #fffbbd;
+  --qs-warning-experimental-light-foreground: #fffbbd;
+  --qs-error-medium: #900;
+  --qs-error-dark: #700000;
+  --qs-error-light: #ffe0e0;
+  --qs-error-inverse: #fff;
+  --qs-connection-default: #db3300;
+  --qs-connection-soft: #ff997a;
+  --qs-connection-light: #ffe0d6;
+  --qs-connection-dark: #661800;
+  --qs-automation-default: #b3008f;
+  --qs-automation-medium: #d600ba;
+  --qs-automation-soft: #ff94f1;
+  --qs-automation-light: #ffe0fb;
+  --qs-automation-dark: #660052;
+  --qs-insight-default: #a000b8;
+  --qs-insight-soft: #f299ff;
+  --qs-insight-light: #fce6ff;
+  --qs-insight-dark: #590066;
+  --qs-visualization-default: #7300e5;
+  --qs-visualization-soft: #d4a8ff;
+  --qs-visualization-light: #f2e5ff;
+  --qs-visualization-dark: #45008a;
+  --qs-spice: #ff9800;
+  --qs-coachmark: #006ce0;
+  --qs-brand: #fff;
+  --qs-brand-foreground: #131920;
+  --qs-brand-navbar: #131920;
+  --qs-brand-navbar-foreground: #fff;
+  --qs-brand-navbar-light: #dedee3;
+  --qs-brand-navbar-dark: #000;
+  --qs-application-navbar: #4200db;
+  --qs-application-navbar-foreground: #fff;
+  --qs-application-navbar-light: #e8e6ff;
+  --qs-application-navbar-dark: #35009e;
+  --qs-dimension: #4200db;
+  --qs-dimension-foreground: #fff;
+  --qs-dimension-experimental: #4200db;
+  --qs-dimension-experimental-foreground: #4200db;
+  --qs-measure: #00802f;
+  --qs-measure-foreground: #fff;
+  --qs-measure-experimental: #f2b100;
+  --qs-measure-experimental-foreground: #f2b100;
+  --qs-content-inverse: #333843;
+  --qs-content-inverse-active: #131920;
+  --qs-secondary: #dedee3;
+  --qs-disabled: #8c8c94;
+  --qs-divider-light: #f3f3f7;
+  --qs-hover-border: #333843;
+  --qs-active-border: #4200db;
+  --qs-disabled-border: #dedee3;
+  --qs-error-border: #ffe0e0;
+  --qs-error-active-border: #db0000;
+  --qs-disabled-foreground: #b4b4bb;
+  --qs-primary-inverse-foreground: #fff;
+  --qs-error-foreground: #db0000;
+  --qs-contrast-foreground: #131920;
+  --qs-main-foreground: #131920;
+  --qs-main-secondary-foreground: #656871;
+  --qs-action-disabled: #f3f3f7;
+  --qs-action-active: #e8e6ff;
+  --qs-default-badge: #dedee3;
+  --qs-tag-default: #dedee3;
+  --qs-tag-soft-border: #b4b4bb;
+  --qs-focus-offset: 1px;
+  --qs-toggle-tile-sm: calc(.25rem * 8);
+  --qs-toggle-tile-md: calc(.25rem * 12);
+  --qs-toggle-tile-lg: calc(.25rem * 15);
+  --qs-shadow-pin-right: inset 4px 0 4px -4px #00000029;
+  --qs-shadow-pin-left: inset -4px 0 4px -4px #00000029;
+  --react-pdf-text-layer: 1;
+  --highlight-bg-color: #b400aa;
+  --highlight-selected-bg-color: #006400;
+  --react-pdf-annotation-layer: 1;
+  --annotation-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
+  --input-focus-border-color: Highlight;
+  --input-focus-outline: 1px solid Canvas;
+  --input-unfocused-border-color: transparent;
+  --input-disabled-border-color: transparent;
+  --input-hover-border-color: black;
+  --link-outline: none;
+  color-scheme: dark;
+}
+body { background: var(--color-bg); color: var(--color-text); }
+a { color: var(--color-link, var(--color-primary)); }</style>
+<meta charset="UTF-8">
+<title>eBay Card Listing Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --color-bg: #f8f9fa;
+    --color-bg-secondary: #ffffff;
+    --color-text: #1a1a2e;
+    --color-text-secondary: #4a5568;
+    --color-text-muted: #8993a4;
+    --color-border: #e2e8f0;
+    --color-border-light: #edf2f7;
+    --color-primary: #2563eb;
+    --color-success: #16a34a;
+    --color-error: #dc2626;
+    --color-surface: #ffffff;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'SF Mono', Consolas, monospace;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--color-bg); font-family: var(--font-sans); color: var(--color-text); padding: 32px; max-width: 800px; margin: 0 auto; }
+  
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: var(--color-text-muted); font-size: 13px; margin-bottom: 24px; }
+  
+  .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--color-border-light); }
+  .tab { padding: 10px 20px; font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-secondary); transition: all 0.15s ease; user-select: none; }
+  .tab:hover { color: var(--color-text); }
+  .tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+  
+  .form-section { display: none; }
+  .form-section.active { display: block; }
+  
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  
+  label { display: block; font-size: 11px; font-weight: 600; color: var(--color-text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg-secondary); color: var(--color-text); font-size: 14px; font-family: var(--font-sans); transition: border-color 0.15s ease; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  textarea { resize: vertical; min-height: 70px; }
+  
+  .search-wrapper { position: relative; }
+  .search-results { position: absolute; top: 100%; left: 0; right: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); max-height: 260px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .search-results.visible { display: block; }
+  .search-item { padding: 10px 14px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--color-border-light); }
+  .search-item:last-child { border-bottom: none; }
+  .search-item:hover { background: var(--color-bg); }
+  .search-item img { width: 40px; height: 56px; object-fit: contain; border-radius: 3px; }
+  .search-item-info { flex: 1; }
+  .search-item-name { font-weight: 600; font-size: 13px; }
+  .search-item-detail { color: var(--color-text-muted); font-size: 11px; margin-top: 2px; }
+  .search-loading { padding: 14px; text-align: center; color: var(--color-text-muted); font-size: 13px; }
+  
+  .selected-card { background: var(--color-bg); border: 1px solid var(--color-primary); border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 10px; display: none; font-size: 13px; }
+  .selected-card.visible { display: flex; align-items: center; gap: 14px; }
+  .selected-card img { width: 55px; height: 77px; object-fit: contain; border-radius: 4px; }
+  .selected-card-info { flex: 1; }
+  .selected-card-name { font-weight: 600; font-size: 14px; }
+  .selected-card-meta { color: var(--color-text-muted); font-size: 12px; margin-top: 4px; }
+  .selected-card .clear-btn { background: none; border: none; color: var(--color-text-muted); cursor: pointer; font-size: 16px; padding: 6px; border-radius: 4px; }
+  .selected-card .clear-btn:hover { color: var(--color-error); background: rgba(220,38,38,0.08); }
+  
+  .btn { padding: 11px 22px; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .btn-primary { background: var(--color-primary); color: #fff; }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+  .btn-secondary { background: var(--color-bg-secondary); color: var(--color-text); border: 1px solid var(--color-border); }
+  .btn-secondary:hover { background: var(--color-bg); }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; }
+  
+  .output-section { margin-top: 28px; display: none; padding-top: 20px; border-top: 1px solid var(--color-border-light); }
+  .output-section.visible { display: block; }
+  .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .output-header h2 { font-size: 16px; font-weight: 600; }
+  
+  .output-title-box { background: var(--color-bg-secondary); border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 14px; }
+  .output-title-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 6px; letter-spacing: 0.04em; }
+  
+  .output-textarea { width: 100%; min-height: 420px; padding: 18px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg-secondary); color: var(--color-text); font-size: 12px; line-height: 1.6; font-family: var(--font-mono); resize: vertical; }
+  
+  .output-preview { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 14px; }
+  
+  .output-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--color-border-light); }
+  .output-tab { padding: 8px 16px; font-size: 12px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--color-text-secondary); }
+  .output-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+  
+  .copy-row { display: flex; gap: 10px; margin-top: 12px; }
+  
+  .output-view { display: none; }
+  .output-view.active { display: block; }
+  
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--color-success); color: #fff; padding: 12px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
+  .toast.show { opacity: 1; }
+  
+  .hint { font-size: 11px; color: var(--color-text-muted); margin-top: 5px; font-style: italic; }
+
+  .update-bar { display: flex; align-items: center; justify-content: space-between; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 8px 14px; margin-bottom: 20px; font-size: 12px; }
+  .update-bar .version { color: var(--color-text-muted); }
+  .update-bar .update-status { color: var(--color-text-secondary); }
+  .update-bar .btn-update { padding: 6px 14px; font-size: 12px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+  .update-bar .btn-check { background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-secondary); }
+  .update-bar .btn-check:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .update-bar .btn-apply { background: var(--color-success); color: #fff; }
+  .update-bar .btn-apply:hover { opacity: 0.9; }
+  .update-bar .spinner { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+
+<div class="update-bar" id="update-bar">
+  <span class="version" id="app-version">v1.0.0</span>
+  <span class="update-status" id="update-status">Ready</span>
+  <button class="btn-update btn-check" id="update-btn" onclick="handleUpdate()">
+    <i class="fa-solid fa-arrows-rotate"></i> Check for Update
+  </button>
+</div>
+
+<h1><i class="fa-solid fa-tag"></i> eBay Listing Generator</h1>
+<p class="subtitle">Search for a card, fill in details, and generate a listing description</p>
+
+<div class="tabs">
+  <div class="tab active" data-tab="pokemon"><i class="fa-solid fa-bolt"></i> Pokémon</div>
+  <div class="tab" data-tab="sports"><i class="fa-solid fa-baseball"></i> Sports</div>
+</div>
+
+<!-- POKEMON FORM -->
+<div class="form-section active" id="pokemon-form">
+  <div class="form-grid full">
+    <div>
+      <label>Search Pokémon Card (type name or number)</label>
+      <div class="search-wrapper">
+        <input type="text" id="poke-search" placeholder="e.g. Charizard ex, Pikachu 025..." autocomplete="off">
+        <div class="search-results" id="poke-results"></div>
+      </div>
+      <p class="hint">Results appear as you type — select one to auto-fill details</p>
+      <div class="selected-card" id="poke-selected">
+        <img id="poke-selected-img" src="">
+        <div class="selected-card-info">
+          <div class="selected-card-name" id="poke-selected-name"></div>
+          <div class="selected-card-meta" id="poke-selected-meta"></div>
+        </div>
+        <button class="clear-btn" onclick="clearPokemonSelection()" title="Clear selection"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="form-grid">
+    <div><label>Player / Pokémon</label><input type="text" id="poke-name" placeholder="Auto-filled from search"></div>
+    <div><label>Card Number</label><input type="text" id="poke-number" placeholder="e.g. #199/165"></div>
+    <div><label>Set</label><input type="text" id="poke-set" placeholder="e.g. Scarlet &amp; Violet 151"></div>
+    <div><label>Year</label><input type="text" id="poke-year" placeholder="e.g. 2023"></div>
+    <div><label>Manufacturer</label><input type="text" id="poke-manufacturer" value="Pokémon"></div>
+    <div><label>Rarity / Parallel</label><input type="text" id="poke-rarity" placeholder="e.g. Special Illustration Rare"></div>
+    <div>
+      <label>Grading Status</label>
+      <select id="poke-grading">
+        <option value="Raw (Ungraded)">Raw (Ungraded)</option>
+        <option value="PSA 10">PSA 10</option>
+        <option value="PSA 9">PSA 9</option>
+        <option value="PSA 8">PSA 8</option>
+        <option value="PSA 7">PSA 7</option>
+        <option value="BGS 10 (Black Label)">BGS 10 (Black Label)</option>
+        <option value="BGS 9.5">BGS 9.5</option>
+        <option value="BGS 9">BGS 9</option>
+        <option value="CGC 10">CGC 10</option>
+        <option value="CGC 9.5">CGC 9.5</option>
+        <option value="CGC 9">CGC 9</option>
+      </select>
+    </div>
+    <div><label>Serial Number (if applicable)</label><input type="text" id="poke-serial" placeholder="e.g. ##/##"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="generateListing('pokemon')"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Listing</button>
+    <button class="btn btn-secondary" onclick="clearForm('pokemon')"><i class="fa-solid fa-eraser"></i> Clear</button>
+  </div>
+</div>
+
+<!-- SPORTS FORM -->
+<div class="form-section" id="sports-form">
+  <div class="form-grid">
+    <div>
+      <label>Game/Sport</label>
+      <select id="sports-sport">
+        <option value="MLB">MLB</option>
+        <option value="NBA">NBA</option>
+        <option value="NFL">NFL</option>
+        <option value="NHL">NHL</option>
+      </select>
+    </div>
+    <div><label>Player</label><input type="text" id="sports-player" placeholder="e.g. Mike Trout"></div>
+    <div><label>Card Number</label><input type="text" id="sports-number" placeholder="e.g. #1"></div>
+    <div><label>Set</label><input type="text" id="sports-set" placeholder="e.g. Topps Chrome"></div>
+    <div><label>Year</label><input type="text" id="sports-year" placeholder="e.g. 2023"></div>
+    <div>
+      <label>Manufacturer</label>
+      <select id="sports-manufacturer">
+        <option value="Topps">Topps</option>
+        <option value="Panini">Panini</option>
+        <option value="Upper Deck">Upper Deck</option>
+        <option value="Bowman">Bowman</option>
+        <option value="Donruss">Donruss</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div><label>Rarity / Parallel</label><input type="text" id="sports-rarity" placeholder="e.g. Refractor, Silver Prizm, Auto"></div>
+    <div>
+      <label>Grading Status</label>
+      <select id="sports-grading">
+        <option value="Raw (Ungraded)">Raw (Ungraded)</option>
+        <option value="PSA 10">PSA 10</option>
+        <option value="PSA 9">PSA 9</option>
+        <option value="PSA 8">PSA 8</option>
+        <option value="PSA 7">PSA 7</option>
+        <option value="BGS 10 (Black Label)">BGS 10 (Black Label)</option>
+        <option value="BGS 9.5">BGS 9.5</option>
+        <option value="BGS 9">BGS 9</option>
+        <option value="CGC 10">CGC 10</option>
+        <option value="CGC 9.5">CGC 9.5</option>
+        <option value="CGC 9">CGC 9</option>
+        <option value="SGC 10">SGC 10</option>
+        <option value="SGC 9.5">SGC 9.5</option>
+      </select>
+    </div>
+    <div><label>Serial Number (if applicable)</label><input type="text" id="sports-serial" placeholder="e.g. 25/99"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="generateListing('sports')"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Listing</button>
+    <button class="btn btn-secondary" onclick="clearForm('sports')"><i class="fa-solid fa-eraser"></i> Clear</button>
+  </div>
+</div>
+
+<!-- OUTPUT -->
+<div class="output-section" id="output-section">
+  <div class="output-header">
+    <h2><i class="fa-solid fa-file-lines"></i> eBay Listing</h2>
+  </div>
+  <div class="output-title-box">
+    <div class="output-title-label">Suggested Listing Title (keyword-packed — editable)</div>
+    <input type="text" id="listing-title" style="font-family: var(--font-mono); font-size: 14px; font-weight: 500; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px 10px; background: var(--color-bg); width: 100%;">
+  </div>
+  <div class="output-tabs">
+    <div class="output-tab active" data-view="preview">Preview</div>
+    <div class="output-tab" data-view="html">HTML Code</div>
+  </div>
+  <div class="output-view active" id="view-preview">
+    <div class="output-preview" id="output-preview"></div>
+  </div>
+  <div class="output-view" id="view-html">
+    <label>HTML (editable — modify as needed before copying)</label>
+    <textarea class="output-textarea" id="output-textarea"></textarea>
+  </div>
+  <div class="copy-row">
+    <button class="btn btn-primary" onclick="copyHTML()"><i class="fa-solid fa-copy"></i> Copy Description HTML</button>
+    <button class="btn btn-secondary" onclick="copyText('listing-title')"><i class="fa-solid fa-copy"></i> Copy Title</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+  // Output tab switching
+  document.querySelectorAll('.output-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.output-view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    });
+  });
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab + '-form').classList.add('active');
+    });
+  });
+
+  // Pokemon API live search
+  let searchTimeout = null;
+  let selectedCard = null;
+
+  const pokeSearch = document.getElementById('poke-search');
+  const pokeResults = document.getElementById('poke-results');
+
+  pokeSearch.addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    const q = pokeSearch.value.trim();
+    if (q.length < 2) { pokeResults.classList.remove('visible'); return; }
+    
+    pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
+    pokeResults.classList.add('visible');
+    
+    searchTimeout = setTimeout(() => searchPokemon(q), 350);
+  });
+
+  pokeSearch.addEventListener('blur', () => {
+    setTimeout(() => pokeResults.classList.remove('visible'), 200);
+  });
+  pokeSearch.addEventListener('focus', () => {
+    if (pokeResults.children.length > 0 && pokeSearch.value.trim().length >= 2) {
+      pokeResults.classList.add('visible');
+    }
+  });
+
+  async function searchPokemon(query) {
+    try {
+      let url;      
+      // Detect patterns:
+      // "Rapidash 189/182" or "Charizard 199" → name + number
+      // "Rapidash Destined Rivals" → name + set name
+      // "189/182" or just a number → number only
+      
+      const numberMatch = query.match(/(\d+\/?\d*)$/);
+      const pureNumber = /^\d+[\/\d]*$/.test(query.trim());
+      
+      if (pureNumber) {
+        // Just a number like "189/182" or "189"
+        const num = query.trim().split('/')[0];
+        url = `https://api.pokemontcg.io/v2/cards?q=number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+      } else if (numberMatch) {
+        // Name + number like "Rapidash 189/182" or "Rapidash 189"
+        const name = query.substring(0, numberMatch.index).trim().toLowerCase();
+        const num = numberMatch[1].split('/')[0];
+        url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(name)}*" number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+      } else {
+        // Could be "Rapidash" or "Rapidash Destined Rivals"
+        // Try: split into words, first word = card name, rest = possible set name
+        const words = query.trim().split(/\s+/);
+        const firstName = words[0].toLowerCase();
+        
+        if (words.length === 1) {
+          // Just a name like "Rapidash"
+          url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+        } else {
+          // Multiple words — try name + set combination
+          // e.g. "Rapidash Destined Rivals" → name:Rapidash* set.name:"Destined Rivals*"
+          const possibleSet = words.slice(1).join(' ').toLowerCase();
+          url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*" set.name:"${encodeURIComponent(possibleSet)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+        }
+      }
+      
+      const resp = await fetch(url, {
+        headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' }
+      });
+      const data = await resp.json();
+      
+      if (!data.data || data.data.length === 0) {
+        pokeResults.innerHTML = '<div class="search-loading">No results found</div>';
+        return;
+      }
+      
+      pokeResults.innerHTML = '';
+      data.data.forEach(card => {
+        const div = document.createElement('div');
+        div.className = 'search-item';
+        div.innerHTML = `
+          <img src="${card.images?.small || ''}" alt="" loading="lazy">
+          <div class="search-item-info">
+            <div class="search-item-name">${card.name}</div>
+            <div class="search-item-detail">#${card.number} · ${card.set?.name || ''} · ${card.set?.releaseDate?.substring(0,4) || ''} · ${card.rarity || ''}</div>
+          </div>
+        `;
+        div.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          selectPokemonCard(card);
+        });
+        pokeResults.appendChild(div);
+      });
+    } catch (err) {
+      pokeResults.innerHTML = '<div class="search-loading">API error — check your connection and try again</div>';
+      console.error(err);
+    }
+  }
+
+  function selectPokemonCard(card) {
+    selectedCard = card;
+    pokeResults.classList.remove('visible');
+    pokeSearch.value = `${card.name} #${card.number}`;
+    
+    // Show selected card banner
+    document.getElementById('poke-selected').classList.add('visible');
+    document.getElementById('poke-selected-img').src = card.images?.small || '';
+    document.getElementById('poke-selected-name').textContent = card.name;
+    document.getElementById('poke-selected-meta').textContent = `#${card.number} · ${card.set?.name || ''} · ${card.set?.releaseDate?.substring(0,4) || ''} · ${card.rarity || ''}`;
+    
+    // Auto-fill form fields
+    document.getElementById('poke-name').value = card.name;
+    document.getElementById('poke-number').value = `#${card.number}`;
+    document.getElementById('poke-set').value = card.set?.name || '';
+    document.getElementById('poke-year').value = card.set?.releaseDate?.substring(0,4) || '';
+    document.getElementById('poke-rarity').value = card.rarity || (card.subtypes ? card.subtypes.join(' / ') : '');
+  }
+
+  function clearPokemonSelection() {
+    selectedCard = null;
+    document.getElementById('poke-selected').classList.remove('visible');
+    pokeSearch.value = '';
+  }
+
+  // Generate listing description
+  function generateListing(type) {
+    let name, number, set, year, manufacturer, rarity, grading, serial, sport;
+    
+    if (type === 'pokemon') {
+      sport = 'Pokémon';
+      name = document.getElementById('poke-name').value || '[Name]';
+      number = document.getElementById('poke-number').value || '#[Number]';
+      set = document.getElementById('poke-set').value || '[Set Name]';
+      year = document.getElementById('poke-year').value || '[Year]';
+      manufacturer = document.getElementById('poke-manufacturer').value || 'Pokémon';
+      rarity = document.getElementById('poke-rarity').value || '[Rarity]';
+      grading = document.getElementById('poke-grading').value;
+      serial = document.getElementById('poke-serial').value;
+    } else {
+      sport = document.getElementById('sports-sport').value;
+      name = document.getElementById('sports-player').value || '[Name]';
+      number = document.getElementById('sports-number').value || '#[Number]';
+      set = document.getElementById('sports-set').value || '[Set Name]';
+      year = document.getElementById('sports-year').value || '[Year]';
+      manufacturer = document.getElementById('sports-manufacturer').value;
+      rarity = document.getElementById('sports-rarity').value || '[Rarity/Parallel]';
+      grading = document.getElementById('sports-grading').value;
+      serial = document.getElementById('sports-serial').value;
+    }
+
+    // Format the number (ensure it starts with #)
+    if (number && !number.startsWith('#')) number = '#' + number;
+
+    // Build eBay-compatible HTML description
+    let serialRow = serial ? `<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Serial Number</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${serial}</td></tr>` : '';
+    
+    let desc = `<div style="max-width:700px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#222;line-height:1.6;">
+
+<!-- Card Information -->
+<div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+<div style="background:#1a1a2e;color:#fff;padding:14px 18px;font-size:18px;font-weight:bold;">📋 Card Information</div>
+<table style="width:100%;border-collapse:collapse;font-size:14px;">
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Game/Sport</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${sport}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Player/Pokémon</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${name}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Card Number</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${number}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Set</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${set}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Year</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${year}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Manufacturer</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${manufacturer}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Rarity/Parallel</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${rarity}</td></tr>
+<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Grading Status</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${grading}</td></tr>
+${serialRow}
+</table>
+</div>
+
+<!-- Condition -->
+<div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+<div style="background:#1a1a2e;color:#fff;padding:14px 18px;font-size:18px;font-weight:bold;">📸 Condition</div>
+<div style="padding:14px 18px;font-size:14px;">Please refer to the photos for the best representation of the card's condition. The card pictured is the exact card you will receive.</div>
+</div>
+
+<!-- Included -->
+<div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+<div style="background:#1a1a2e;color:#fff;padding:14px 18px;font-size:18px;font-weight:bold;">📦 Included</div>
+<div style="padding:14px 18px;font-size:14px;">
+<ul style="margin:0;padding-left:20px;">
+<li style="margin-bottom:6px;">1x Trading Card</li>
+<li style="margin-bottom:6px;">Penny Sleeve</li>
+<li style="margin-bottom:6px;">Top Loader or Semi-Rigid Holder</li>
+</ul>
+</div>
+</div>
+
+<!-- Refund Policy -->
+<div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+<div style="background:#8b0000;color:#fff;padding:14px 18px;font-size:18px;font-weight:bold;">⚠️ Refund Policy</div>
+<div style="padding:14px 18px;font-size:14px;">No refunds will be issued unless the wrong card is received. Please review all photos carefully before purchasing. If you have any questions, feel free to message before buying.</div>
+</div>
+
+<div style="text-align:center;padding:12px;color:#888;font-size:12px;">Thank you for looking — happy collecting! 🎴</div>
+</div>`;
+
+    // Build keyword-packed eBay title 
+    let condShort = grading === 'Raw (Ungraded)' ? 'NM' : grading;
+    let title = '';
+    if (type === 'pokemon') {
+      title = `${name} ${number} ${set} ${rarity} ${condShort}`.trim();
+    } else {
+      title = `${year} ${manufacturer} ${set} ${name} ${number} ${rarity} ${condShort}`.trim();
+    }
+
+    // Show output
+    document.getElementById('listing-title').value = title;
+    document.getElementById('output-textarea').value = desc;
+    document.getElementById('output-preview').innerHTML = desc;
+    document.getElementById('output-section').classList.add('visible');
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function clearForm(type) {
+    if (type === 'pokemon') {
+      clearPokemonSelection();
+      document.querySelectorAll('#pokemon-form input, #pokemon-form select').forEach(el => {
+        if (el.id === 'poke-manufacturer') { el.value = 'Pokémon'; }
+        else if (el.id === 'poke-grading') { el.selectedIndex = 0; }
+        else if (el.tagName === 'SELECT') { el.selectedIndex = 0; }
+        else { el.value = ''; }
+      });
+    } else {
+      document.querySelectorAll('#sports-form input, #sports-form select').forEach(el => {
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+      });
+    }
+    document.getElementById('output-section').classList.remove('visible');
+  }
+
+  function copyHTML() {
+    const text = document.getElementById('output-textarea').value;
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  }
+
+  function copyText(id) {
+    const el = document.getElementById(id);
+    const text = el.value || el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  }
+
+  // ============================================================
+  // UPDATE SYSTEM (Electron IPC)
+  // ============================================================
+  let updateAvailable = false;
+  
+  // Check if running in Electron
+  const isElectron = (typeof process !== 'undefined' && process.versions && process.versions.electron);
+  
+  if (isElectron) {
+    const { ipcRenderer } = require('electron');
+    
+    // Show current version
+    ipcRenderer.invoke('get-version').then(version => {
+      document.getElementById('app-version').textContent = 'v' + version;
+    });
+    
+    window.handleUpdate = async function() {
+      const btn = document.getElementById('update-btn');
+      const status = document.getElementById('update-status');
+      
+      if (updateAvailable) {
+        // Apply the update
+        btn.innerHTML = '<i class="fa-solid fa-spinner spinner"></i> Updating...';
+        btn.disabled = true;
+        status.textContent = 'Downloading update...';
+        
+        const result = await ipcRenderer.invoke('apply-update');
+        
+        if (result.success) {
+          status.textContent = `Updated to v${result.version}! Reloading...`;
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Done!';
+          // The main process will reload the window
+        } else {
+          status.textContent = 'Update failed: ' + (result.error || 'Unknown error');
+          btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Retry';
+          btn.disabled = false;
+        }
+      } else {
+        // Check for update
+        btn.innerHTML = '<i class="fa-solid fa-spinner spinner"></i> Checking...';
+        btn.disabled = true;
+        status.textContent = 'Checking for updates...';
+        
+        const result = await ipcRenderer.invoke('check-for-update');
+        
+        if (result.available) {
+          updateAvailable = true;
+          status.textContent = result.message;
+          btn.innerHTML = '<i class="fa-solid fa-download"></i> Update Now';
+          btn.className = 'btn-update btn-apply';
+          btn.disabled = false;
+        } else {
+          status.textContent = result.message || 'You\'re up to date!';
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Up to date';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Check for Update';
+            btn.disabled = false;
+          }, 3000);
+        }
+      }
+    };
+  } else {
+    // Not running in Electron — hide update bar or show info
+    const bar = document.getElementById('update-bar');
+    if (bar) bar.style.display = 'none';
+  }
+
+</script>
+
+
+</body></html>
