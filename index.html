@@ -642,12 +642,30 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   pokeSearch.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     const q = pokeSearch.value.trim();
-    if (q.length < 3) { pokeResults.classList.remove('visible'); return; }
+    if (q.length < 3) { 
+      pokeResults.classList.remove('visible'); 
+      return; 
+    }
     
-    pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
-    pokeResults.classList.add('visible');
-    
-    searchTimeout = setTimeout(() => searchPokemon(q), 500);
+    // Auto-search after 1.5 seconds of no typing
+    searchTimeout = setTimeout(() => {
+      pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
+      pokeResults.classList.add('visible');
+      searchPokemon(q);
+    }, 1500);
+  });
+
+  // Instant search on Enter key
+  pokeSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(searchTimeout);
+      const q = pokeSearch.value.trim();
+      if (q.length < 2) return;
+      pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
+      pokeResults.classList.add('visible');
+      searchPokemon(q);
+    }
   });
 
   pokeSearch.addEventListener('blur', () => {
