@@ -347,7 +347,9 @@
   color-scheme: dark;
 }
 body { background: var(--color-bg); color: var(--color-text); }
-a { color: var(--color-link, var(--color-primary)); }</style>
+a { color: var(--color-link, var(--color-primary)); }</style></head><body><div class="theme-toggle" id="theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></div>
+
+
 <meta charset="UTF-8">
 <title>eBay Card Listing Generator</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -445,6 +447,32 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   
   .hint { font-size: 11px; color: var(--color-text-muted); margin-top: 5px; font-style: italic; }
 
+  /* Title character counter */
+  .title-counter { font-size: 11px; margin-top: 4px; text-align: right; }
+  .title-counter.ok { color: var(--color-success); }
+  .title-counter.warn { color: var(--color-warning, #d97706); }
+  .title-counter.over { color: var(--color-error); font-weight: 600; }
+
+  /* Recent searches */
+  .recent-section { margin-top: 8px; }
+  .recent-label { font-size: 10px; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 4px; letter-spacing: 0.04em; }
+  .recent-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .recent-chip { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 100px; padding: 4px 10px; font-size: 11px; cursor: pointer; transition: all 0.15s; color: var(--color-text-secondary); }
+  .recent-chip:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+  /* Dark mode */
+  body.dark { --color-bg: #1a1a2e; --color-bg-secondary: #252540; --color-text: #e8e8f0; --color-text-secondary: #a0a0b8; --color-text-muted: #6b6b80; --color-border: #3a3a50; --color-border-light: #2e2e45; --color-surface: #2a2a42; --color-primary: #6b8cff; --color-success: #34d399; --color-error: #f87171; }
+  body.dark .output-preview { background: #252540; }
+  body.dark input, body.dark select, body.dark textarea { background: #1e1e35; color: #e8e8f0; border-color: #3a3a50; }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; top: 12px; right: 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 100px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; z-index: 200; transition: all 0.15s; }
+  .theme-toggle:hover { border-color: var(--color-primary); }
+
+  /* Template preset selector */
+  .preset-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .preset-row label { margin-bottom: 0; }
+
   .update-bar { display: flex; align-items: center; justify-content: space-between; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 8px 14px; margin-bottom: 20px; font-size: 12px; }
   .update-bar .version { color: var(--color-text-muted); }
   .update-bar .update-status { color: var(--color-text-secondary); }
@@ -456,8 +484,8 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   .update-bar .spinner { display: inline-block; animation: spin 1s linear infinite; }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
-</head>
-<body>
+
+
 
 
 <div class="update-bar" id="update-bar">
@@ -484,8 +512,23 @@ a { color: var(--color-link, var(--color-primary)); }</style>
       <div class="search-wrapper">
         <input type="text" id="poke-search" placeholder="e.g. Charizard ex, Pikachu 025..." autocomplete="off">
         <div class="search-results" id="poke-results"></div>
-      </div>
+    <div class="title-counter ok" id="title-counter">0/80</div>
+  </div>
+  <!-- Template preset -->
+  <div class="preset-row">
+    <label>Template:</label>
+    <select id="template-preset" onchange="savePresetChoice()" style="width: auto; padding: 6px 10px; font-size: 12px;">
+      <option value="raw">Raw Card (Penny Sleeve + Top Loader)</option>
+      <option value="graded">Graded Card (Slab only)</option>
+      <option value="raw-semi">Raw Card (Penny Sleeve + Semi-Rigid)</option>
+    </select>
+  </div>
       <p class="hint">Results appear as you type — select one to auto-fill details</p>
+      <!-- Recent searches -->
+      <div class="recent-section" id="recent-section" style="display:none;">
+        <div class="recent-label">Recent Searches</div>
+        <div class="recent-chips" id="recent-chips"></div>
+      </div>
       <div class="selected-card" id="poke-selected">
         <img id="poke-selected-img" src="">
         <div class="selected-card-info">
@@ -588,7 +631,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   </div>
   <div class="output-title-box">
     <div class="output-title-label">Suggested Listing Title (keyword-packed — editable)</div>
-    <input type="text" id="listing-title" style="font-family: var(--font-mono); font-size: 14px; font-weight: 500; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px 10px; background: var(--color-bg); width: 100%;">
+    <input type="text" id="listing-title" style="font-family: var(--font-mono); font-size: 14px; font-weight: 500; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px 10px; background: var(--color-bg); width: 100%;" oninput="updateTitleCounter()" maxlength="80">
   </div>
   <div class="output-tabs">
     <div class="output-tab active" data-view="preview">Preview</div>
@@ -604,6 +647,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   <div class="copy-row">
     <button class="btn btn-primary" onclick="copyHTML()"><i class="fa-solid fa-copy"></i> Copy Description HTML</button>
     <button class="btn btn-secondary" onclick="copyText('listing-title')"><i class="fa-solid fa-copy"></i> Copy Title</button>
+    <button class="btn btn-secondary" onclick="copyAndClear()" style="margin-left:auto;"><i class="fa-solid fa-forward"></i> Copy &amp; Next</button>
   </div>
 </div>
 
@@ -781,6 +825,9 @@ a { color: var(--color-link, var(--color-primary)); }</style>
     document.getElementById('poke-set').value = card.set?.name || '';
     document.getElementById('poke-year').value = card.set?.releaseDate?.substring(0,4) || '';
     document.getElementById('poke-rarity').value = card.rarity || (card.subtypes ? card.subtypes.join(' / ') : '');
+    
+    // Save to recent searches
+    addRecentSearch(`${card.name} #${card.number}`, `${card.name} ${card.number}`);
   }
 
   function clearPokemonSelection() {
@@ -849,11 +896,7 @@ ${serialRow}
 <div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
 <div style="background:#1a1a2e;color:#fff;padding:14px 18px;font-size:18px;font-weight:bold;">📦 Included</div>
 <div style="padding:14px 18px;font-size:14px;">
-<ul style="margin:0;padding-left:20px;">
-<li style="margin-bottom:6px;">1x Trading Card</li>
-<li style="margin-bottom:6px;">Penny Sleeve</li>
-<li style="margin-bottom:6px;">Top Loader or Semi-Rigid Holder</li>
-</ul>
+${getIncludedHTML(document.getElementById('template-preset').value)}
 </div>
 </div>
 
@@ -890,6 +933,7 @@ ${serialRow}
 
     // Show output
     document.getElementById('listing-title').value = title;
+    updateTitleCounter();
     document.getElementById('output-textarea').value = desc;
     document.getElementById('output-preview').innerHTML = desc;
     document.getElementById('output-section').classList.add('visible');
@@ -930,6 +974,124 @@ ${serialRow}
       const toast = document.getElementById('toast');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  }
+
+  // ============================================================
+  // DARK MODE
+  // ============================================================
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('ebay-listing-dark', isDark ? '1' : '0');
+    document.getElementById('theme-toggle').innerHTML = isDark 
+      ? '<i class="fa-solid fa-sun"></i>' 
+      : '<i class="fa-solid fa-moon"></i>';
+  }
+  // Load saved theme preference
+  if (localStorage.getItem('ebay-listing-dark') === '1') {
+    document.body.classList.add('dark');
+    document.getElementById('theme-toggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
+  }
+
+  // ============================================================
+  // TITLE CHARACTER COUNTER
+  // ============================================================
+  function updateTitleCounter() {
+    const input = document.getElementById('listing-title');
+    const counter = document.getElementById('title-counter');
+    const len = input.value.length;
+    counter.textContent = `${len}/80`;
+    counter.className = 'title-counter ' + (len <= 65 ? 'ok' : len <= 80 ? 'warn' : 'over');
+  }
+
+  // ============================================================
+  // RECENT SEARCHES (stored in localStorage)
+  // ============================================================
+  function getRecentSearches() {
+    try {
+      return JSON.parse(localStorage.getItem('ebay-listing-recent') || '[]');
+    } catch (e) { return []; }
+  }
+
+  function addRecentSearch(cardName, query) {
+    let recent = getRecentSearches();
+    // Remove duplicates
+    recent = recent.filter(r => r.query !== query);
+    // Add to front
+    recent.unshift({ name: cardName, query: query });
+    // Keep max 15
+    if (recent.length > 15) recent = recent.slice(0, 15);
+    localStorage.setItem('ebay-listing-recent', JSON.stringify(recent));
+    renderRecentSearches();
+  }
+
+  function renderRecentSearches() {
+    const recent = getRecentSearches();
+    const section = document.getElementById('recent-section');
+    const chips = document.getElementById('recent-chips');
+    if (recent.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    chips.innerHTML = recent.map(r => 
+      `<span class="recent-chip" onclick="replaySearch('${r.query.replace(/'/g, "\\'")}')">${r.name}</span>`
+    ).join('');
+  }
+
+  function replaySearch(query) {
+    document.getElementById('poke-search').value = query;
+    const pokeResults = document.getElementById('poke-results');
+    pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
+    pokeResults.classList.add('visible');
+    searchPokemon(query);
+  }
+
+  // Render on load
+  renderRecentSearches();
+
+  // ============================================================
+  // TEMPLATE PRESETS
+  // ============================================================
+  function getIncludedHTML(preset) {
+    if (preset === 'graded') {
+      return `<ul style="margin:0;padding-left:20px;">
+<li style="margin-bottom:6px;">1x Graded Trading Card (in slab)</li>
+</ul>`;
+    } else if (preset === 'raw-semi') {
+      return `<ul style="margin:0;padding-left:20px;">
+<li style="margin-bottom:6px;">1x Trading Card</li>
+<li style="margin-bottom:6px;">Penny Sleeve</li>
+<li style="margin-bottom:6px;">Semi-Rigid Holder</li>
+</ul>`;
+    } else {
+      return `<ul style="margin:0;padding-left:20px;">
+<li style="margin-bottom:6px;">1x Trading Card</li>
+<li style="margin-bottom:6px;">Penny Sleeve</li>
+<li style="margin-bottom:6px;">Top Loader or Semi-Rigid Holder</li>
+</ul>`;
+    }
+  }
+
+  function savePresetChoice() {
+    const preset = document.getElementById('template-preset').value;
+    localStorage.setItem('ebay-listing-preset', preset);
+  }
+  // Load saved preset
+  const savedPreset = localStorage.getItem('ebay-listing-preset');
+  if (savedPreset) document.getElementById('template-preset').value = savedPreset;
+
+  // ============================================================
+  // COPY & CLEAR (Copy & Next)
+  // ============================================================
+  function copyAndClear() {
+    const text = document.getElementById('output-textarea').value;
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Copied! Form cleared for next card.';
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); toast.textContent = 'Copied to clipboard!'; }, 2000);
+      // Determine which form is active and clear it
+      const pokemonActive = document.querySelector('#pokemon-form.active');
+      clearForm(pokemonActive ? 'pokemon' : 'sports');
     });
   }
 
