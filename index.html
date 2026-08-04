@@ -633,6 +633,8 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   // Pokemon API live search
   let searchTimeout = null;
   let selectedCard = null;
+  let currentSearchId = 0;        // Track which search is "current"
+  let abortController = null;     // Cancel in-flight fetch requests
 
   const pokeSearch = document.getElementById('poke-search');
   const pokeResults = document.getElementById('poke-results');
@@ -640,12 +642,12 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   pokeSearch.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     const q = pokeSearch.value.trim();
-    if (q.length < 2) { pokeResults.classList.remove('visible'); return; }
+    if (q.length < 3) { pokeResults.classList.remove('visible'); return; }
     
     pokeResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Searching...</div>';
     pokeResults.classList.add('visible');
     
-    searchTimeout = setTimeout(() => searchPokemon(q), 350);
+    searchTimeout = setTimeout(() => searchPokemon(q), 500);
   });
 
   pokeSearch.addEventListener('blur', () => {
@@ -659,6 +661,12 @@ a { color: var(--color-link, var(--color-primary)); }</style>
 
   async function searchPokemon(query) {
     try {
+      // Cancel any in-flight request
+      if (abortController) abortController.abort();
+      abortController = new AbortController();
+      const thisSearchId = ++currentSearchId;
+      const signal = abortController.signal;
+
       let url;      
       // Detect patterns:
       // "Rapidash 189/182" or "Charizard 199" → name + number
@@ -695,8 +703,13 @@ a { color: var(--color-link, var(--color-primary)); }</style>
       }
       
       const resp = await fetch(url, {
-        headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' }
+        headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
+        signal: signal
       });
+      
+      // If a newer search has started, discard this result
+      if (thisSearchId !== currentSearchId) return;
+      
       const data = await resp.json();
       
       if (!data.data || data.data.length === 0) {
@@ -722,7 +735,13 @@ a { color: var(--color-link, var(--color-primary)); }</style>
         pokeResults.appendChild(div);
       });
     } catch (err) {
-      pokeResults.innerHTML = '<div class="search-loading">API error — check your connection and try again</div>';
+      // Ignore abort errors (expected when user keeps typing)
+      if (err.name === 'AbortError') return;
+      
+      // Only show error if this is still the current search
+      if (currentSearchId === currentSearchId) {
+        pokeResults.innerHTML = '<div class="search-loading">API error — check your connection and try again</div>';
+      }
       console.error(err);
     }
   }
