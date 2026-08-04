@@ -840,7 +840,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
     
     // Auto-fill form fields
     document.getElementById('poke-name').value = card.name;
-    document.getElementById('poke-number').value = `#${card.number}`;
+    document.getElementById('poke-number').value = card.number;
     document.getElementById('poke-set').value = card.set?.name || '';
     document.getElementById('poke-year').value = card.set?.releaseDate?.substring(0,4) || '';
     document.getElementById('poke-rarity').value = card.rarity || (card.subtypes ? card.subtypes.join(' / ') : '');
@@ -862,7 +862,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
     if (type === 'pokemon') {
       sport = 'Pokémon';
       name = document.getElementById('poke-name').value || '[Name]';
-      number = document.getElementById('poke-number').value || '#[Number]';
+      number = document.getElementById('poke-number').value || '[Number]';
       set = document.getElementById('poke-set').value || '[Set Name]';
       year = document.getElementById('poke-year').value || '[Year]';
       manufacturer = document.getElementById('poke-manufacturer').value || 'Pokémon';
@@ -881,8 +881,8 @@ a { color: var(--color-link, var(--color-primary)); }</style>
       serial = document.getElementById('sports-serial').value;
     }
 
-    // Format the number (ensure it starts with #)
-    if (number && !number.startsWith('#')) number = '#' + number;
+    // Format the number: add # for sports cards only
+    if (type === 'sports' && number && !number.startsWith('#')) number = '#' + number;
 
     // Build eBay-compatible HTML description
     let serialRow = serial ? `<tr><td style="padding:8px 12px;font-weight:bold;color:#333;border-bottom:1px solid #eee;width:180px;">Serial Number</td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${serial}</td></tr>` : '';
@@ -1224,13 +1224,16 @@ ${getIncludedHTML(document.getElementById('template-preset').value)}
   // UPDATE SYSTEM (Electron IPC)
   // ============================================================
   let updateAvailable = false;
-  
+
   // Check if running in Electron
-  const isElectron = (typeof process !== 'undefined' && process.versions && process.versions.electron);
-  
-  if (isElectron) {
-    const { ipcRenderer } = require('electron');
-    
+  const isElectron = (typeof process !== 'undefined' && process.versions && process.versions.electron && typeof require === 'function');
+
+  if (isElectron) {    
+    let ipcRenderer;
+    try { ipcRenderer = require('electron').ipcRenderer; } catch(e) { }
+    if (!ipcRenderer) { document.getElementById('update-bar').style.display = 'none'; }
+    else {
+
     // Show current version
     ipcRenderer.invoke('get-version').then(version => {
       document.getElementById('app-version').textContent = 'v' + version;
@@ -1281,6 +1284,7 @@ ${getIncludedHTML(document.getElementById('template-preset').value)}
         }
       }
     };
+    } // end else (ipcRenderer exists)
   } else {
     // Not running in Electron — hide update bar or show info
     const bar = document.getElementById('update-bar');
