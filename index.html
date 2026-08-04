@@ -852,9 +852,22 @@ ${serialRow}
     let condShort = grading === 'Raw (Ungraded)' ? 'NM' : grading;
     let title = '';
     if (type === 'pokemon') {
-      title = `${name} ${number} ${set} ${rarity} ${condShort}`.trim();
+      // Option A: Name-first
+      // Pattern: [Name] #[Number] [Set] [Rarity] [Year] Pokemon [Condition]
+      let parts = [name, number, set, rarity, year, 'Pokemon', condShort];
+      title = parts.filter(p => p && p !== '#[Number]' && p !== '[Set Name]' && p !== '[Year]' && p !== '[Rarity]').join(' ');
     } else {
-      title = `${year} ${manufacturer} ${set} ${name} ${number} ${rarity} ${condShort}`.trim();
+      // Option B: Year-first
+      // Pattern: [Year] [Manufacturer] [Set] [Player] #[Number] [Parallel] [Condition]
+      let parts = [year, manufacturer, set, name, number, rarity, condShort];
+      title = parts.filter(p => p && p !== '#[Number]' && p !== '[Set Name]' && p !== '[Year]' && p !== '[Name]' && p !== '[Rarity/Parallel]').join(' ');
+    }
+    
+    // Truncate to 80 characters max (cut at last full word)
+    if (title.length > 80) {
+      title = title.substring(0, 80);
+      const lastSpace = title.lastIndexOf(' ');
+      if (lastSpace > 60) title = title.substring(0, lastSpace);
     }
 
     // Show output
