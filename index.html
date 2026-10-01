@@ -748,56 +748,73 @@ a { color: var(--color-link, var(--color-primary)); }</style>
       const thisSearchId = ++currentSearchId;
       const signal = abortController.signal;
 
-      let url;      
-      // Detect patterns:
-      // "Rapidash 189/182" or "Charizard 199" → name + number
-      // "Rapidash Destined Rivals" → name + set name
-      // "189/182" or just a number → number only
-      
+      let url;
       const numberMatch = query.match(/(\d+\/?\d*)$/);
       const pureNumber = /^\d+[\/\d]*$/.test(query.trim());
       
       if (pureNumber) {
-        // Just a number like "189/182" or "189"
         const num = query.trim().split('/')[0];
         url = `https://api.pokemontcg.io/v2/cards?q=number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
       } else if (numberMatch) {
-        // Name + number like "Rapidash 189/182" or "Rapidash 189"
         const name = query.substring(0, numberMatch.index).trim().toLowerCase();
         const num = numberMatch[1].split('/')[0];
         url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(name)}*" number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
       } else {
-        // Could be "Rapidash" or "Rapidash Destined Rivals"
-        // Try: split into words, first word = card name, rest = possible set name
-        const words = query.trim().split(/\s+/);
-        const firstName = words[0].toLowerCase();
-        
-        if (words.length === 1) {
-          // Just a name like "Rapidash"
-          url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
-        } else {
-          // Multiple words — try name + set combination
-          // e.g. "Rapidash Destined Rivals" → name:Rapidash* set.name:"Destined Rivals*"
-          const possibleSet = words.slice(1).join(' ').toLowerCase();
-          url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*" set.name:"${encodeURIComponent(possibleSet)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
-        }
+        // Always search the FULL query as the card name first.
+        // This handles "Charizard EX", "Mega Charizard", "Charizard V", "Charizard VMAX", etc.
+        const fullName = query.trim().toLowerCase();
+        url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(fullName)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
       }
       
-      const resp = await fetch(url, {
-        headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
-        signal: signal
-      });
+      let resp;
+      try {
+        resp = await fetch(url, {
+          headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
+          signal: signal
+        });
+      } catch (fetchErr) {
+        if (fetchErr.name === 'AbortError') return;
+        throw fetchErr;
+      }
       
       // If a newer search has started, discard this result
       if (thisSearchId !== currentSearchId) return;
       
-      const data = await resp.json();
+      if (!resp.ok) {
+        // If rate limited (429), show a friendlier message
+        if (resp.status === 429) {
+          pokeResults.innerHTML = '<div class="search-loading">⏳ Rate limited — wait a moment and try again</div>';
+          return;
+        }
+        throw new Error(`API ${resp.status}`);
+      }
+
+      let data;
+      try { data = await resp.json(); } catch(e) { throw new Error('Invalid API response'); }
       
       if (!data.data || data.data.length === 0) {
-        pokeResults.innerHTML = '<div class="search-loading">No results found</div>';
-        return;
+        // Fallback: if multi-word query returned nothing, try first word only as a broader search
+        if (!pureNumber && !numberMatch && query.trim().includes(' ')) {
+          const firstName = query.trim().split(/\s+/)[0].toLowerCase();
+          const fallbackUrl = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*"&pageSize=15&select=id,name,number,set,rarity,images,subtypes`;
+          const fallbackResp = await fetch(fallbackUrl, {
+            headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
+            signal: signal
+          });
+          if (thisSearchId !== currentSearchId) return;
+          if (fallbackResp.ok) {
+            const fallbackData = await fallbackResp.json();
+            if (fallbackData.data && fallbackData.data.length > 0) {
+              data = fallbackData;
+            }
+          }
+        }
+        if (!data.data || data.data.length === 0) {
+          pokeResults.innerHTML = '<div class="search-loading">No results found</div>';
+          return;
+        }
       }
-      
+
       pokeResults.innerHTML = '';
       data.data.forEach(card => {
         const div = document.createElement('div');
