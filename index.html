@@ -1,353 +1,6 @@
 <!DOCTYPE html>
-<html><head><style id="qw-theme">:root {
-  --color-bg: #121218;
-  --color-text: #e4e4ed;
-  --color-navbar-bg: #1a1a24;
-  --color-bg-chat-view: #121218;
-  --color-bg-secondary: #1a1a24;
-  --color-bg-tertiary: #1e1e2a;
-  --color-bg-hover: #2a2a38;
-  --color-surface: #1e1e2a;
-  --color-surface-hover: #2a2a38;
-  --color-surface-active: #353546;
-  --color-border: #ffffff1f;
-  --color-border-light: #ffffff0f;
-  --color-border-strong: #3a3a4e;
-  --color-primary: #8575ff;
-  --color-primary-dark: #4200db;
-  --color-primary-light: #8575ff;
-  --color-primary-bg: color-mix(in srgb, #8575ff 15%, transparent);
-  --color-primary-hover-border: #4200db;
-  --color-nav-icon-active: #8575ff;
-  --color-nav-hover-border: #8575ff;
-  --color-primary-alpha-3: color-mix(in srgb, #8575ff 3%, transparent);
-  --color-primary-alpha-5: color-mix(in srgb, #8575ff 5%, transparent);
-  --color-primary-alpha-8: color-mix(in srgb, #8575ff 8%, transparent);
-  --color-primary-alpha-12: color-mix(in srgb, #8575ff 12%, transparent);
-  --color-primary-alpha-15: color-mix(in srgb, #8575ff 15%, transparent);
-  --color-primary-alpha-20: color-mix(in srgb, #8575ff 20%, transparent);
-  --color-primary-alpha-25: color-mix(in srgb, #8575ff 25%, transparent);
-  --color-primary-alpha-30: color-mix(in srgb, #8575ff 30%, transparent);
-  --color-primary-alpha-40: color-mix(in srgb, #8575ff 40%, transparent);
-  --color-primary-alpha-50: color-mix(in srgb, #8575ff 50%, transparent);
-  --color-primary-alpha-60: color-mix(in srgb, #8575ff 60%, transparent);
-  --color-primary-subtle: color-mix(in srgb, #8575ff 25%, transparent);
-  --color-primary-border: color-mix(in srgb, #8575ff 50%, transparent);
-  --color-focus-ring: color-mix(in srgb, #8575ff 60%, transparent);
-  --color-sidebar-hover: color-mix(in srgb, #8575ff 15%, transparent);
-  --block-hover-outline: 1px dashed color-mix(in srgb, #8575ff 50%, transparent);
-  --block-selected-outline: 1px solid #8575ff;
-  --block-selection-outline-offset: 2px;
-  --block-selected-halo: 0 0 8px color-mix(in srgb, #8575ff 40%, transparent);
-  --color-accent: #8575ff;
-  --color-accent-foreground: #8575ff;
-  --color-accent-dark: #4200db;
-  --color-accent-light: color-mix(in srgb, #8575ff 15%, transparent);
-  --color-accent-inverse: #fff;
-  --color-link: #8575ff;
-  --color-primary-gradient-end: color-mix(in srgb, #8575ff 35%, transparent);
-  --color-primary-bg-solid: #1a1530;
-  --color-user-bubble: #333843;
-  --color-user-bubble-text: #e4e4ed;
-  --color-text-secondary: #a0a0b4;
-  --color-text-tertiary: #8a8a9a;
-  --color-text-muted: #6e6e82;
-  --color-text-on-primary: #fff;
-  --color-success: #4ade80;
-  --color-success-dark: #00802f;
-  --color-success-light: #d9ffd6;
-  --color-success-hover: #005c26;
-  --color-success-bg: #1c2c22;
-  --color-success-border: #0e3d1c;
-  --color-success-foreground: #4ade80;
-  --color-success-dark-foreground: #00802f;
-  --color-success-text: #4ade80;
-  --color-error: #ff6b6b;
-  --color-error-dark: #db0000;
-  --color-error-light: #ffe0e0;
-  --color-error-hover: #3b1a24;
-  --color-error-bg: #3b1a24;
-  --color-error-border: #5e1a24;
-  --color-error-active-border: #db0000;
-  --color-error-foreground: #ff6b6b;
-  --color-error-dark-foreground: #db0000;
-  --color-error-inverse: #fff;
-  --color-error-text: #ff6b6b;
-  --color-warning: #fbbf24;
-  --color-warning-dark: #573a00;
-  --color-warning-light: #fffbbd;
-  --color-warning-hover: #db9200;
-  --color-warning-bg: #3d3520;
-  --color-warning-border: #5e4a1a;
-  --color-warning-foreground: #fbbf24;
-  --color-warning-dark-foreground: #573a00;
-  --color-warning-inverse: #573a00;
-  --color-surface-warning: #fffbbd;
-  --color-text-warning: #573a00;
-  --color-info: #60a5fa;
-  --color-info-dark: #006ce0;
-  --color-info-light: #d1f1ff;
-  --color-info-hover: #003b8f;
-  --color-info-bg: #1a2a42;
-  --color-info-border: #0f3d6e;
-  --color-info-foreground: #60a5fa;
-  --color-info-dark-foreground: #002a66;
-  --color-info-inverse: #fff;
-  --color-overlay: #000000b3;
-  --color-shadow: #0000004d;
-  --color-hover: #ffffff0d;
-  --color-tooltip-bg: #1e1e2af2;
-  --color-tooltip-text: #e4e4ed;
-  --color-voice-purple: #8575ff;
-  --color-voice-purple-dark: #4200db;
-  --color-voice-purple-light: #8575ff;
-  --color-voice-red: #ff6b6b;
-  --color-voice-red-dark: #db0000;
-  --color-voice-amber: #fbbf24;
-  --color-voice-purple-glow: #8575ff66;
-  --color-voice-red-glow: #db000066;
-  --font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
-  --text-2xs: .5625rem;
-  --text-xs: .625rem;
-  --text-sm: .6875rem;
-  --text-base: .75rem;
-  --text-md: .8125rem;
-  --text-lg: .875rem;
-  --text-xl: 1rem;
-  --text-2xl: 1.125rem;
-  --text-3xl: 1.25rem;
-  --text-4xl: 1.5rem;
-  --text-5xl: 2rem;
-  --spacing-1: calc(.25rem * 1);
-  --spacing-1-5: calc(.25rem * 1.5);
-  --spacing-2: calc(.25rem * 2);
-  --spacing-3: calc(.25rem * 3);
-  --spacing-4: calc(.25rem * 4);
-  --spacing-5: calc(.25rem * 5);
-  --spacing-6: calc(.25rem * 6);
-  --spacing-7: calc(.25rem * 7);
-  --spacing-8: calc(.25rem * 8);
-  --spacing-9: calc(.25rem * 9);
-  --spacing-10: calc(.25rem * 10);
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-card: 12px;
-  --radius-lg: 16px;
-  --radius-pill: 8px;
-  --shadow-sm: 0 1px 2px #0003;
-  --shadow-md: 0 4px 12px #0000004d;
-  --color-success-bg-solid: #1a3d28;
-  --color-error-bg-solid: #4a2028;
-  --color-error-border-solid: #5e1a24;
-  --color-warning-bg-solid: #4a3a1e;
-  --color-warning-text: #fbbf24;
-  --color-info-bg-solid: #1a3050;
-  --color-info-bg-solid-alt: #222240;
-  --color-info-text: #60a5fa;
-  --color-info-text-alt: #818cf8;
-  --color-emerald: #34d399;
-  --color-teal: #5eead4;
-  --color-code-bg: #1e1e2a;
-  --color-code-header-bg: #252535;
-  --color-code-text: #e4e4ed;
-  --color-code-border: #2e2e3e;
-  --color-code-muted: #6e6e82;
-  --color-inline-code-bg: #1e1e2a;
-  --color-inline-code-text: #e4e4ed;
-  --color-inline-code-border: #2e2e3e;
-  --color-scrollbar-thumb: #3a3a4e;
-  --color-scrollbar-track: transparent;
-  --color-graph-node-text: #e4e4ed;
-  --color-graph-node-text-dim: #6e6e82;
-  --color-graph-edge-default: #6e6e82;
-  --color-graph-edge-cross: #f39c12;
-  --color-graph-edge-text: #a0a0b4;
-  --color-graph-edge-stroke: #1a1a24;
-  --color-graph-highlight-bg: #ff6b6b;
-  --color-graph-highlight-border: #e74c3c;
-  --color-graph-search-bg: gold;
-  --color-graph-search-border: orange;
-  --color-graph-focus-border: #f44;
-  --color-graph-external-border: #6e6e82;
-  --color-graph-cat-file: #5dade2;
-  --color-graph-cat-folder: #aab7b8;
-  --color-graph-cat-file-aggregate: #5499c7;
-  --color-graph-cat-class: #bb8fce;
-  --color-graph-cat-function: #58d68d;
-  --color-graph-cat-method: #48c9b0;
-  --color-graph-cat-variable: #f5b041;
-  --color-graph-cat-import: #eb984e;
-  --color-graph-cat-module: #7e8ce0;
-  --color-graph-cat-concept: #ec7063;
-  --color-graph-cat-person: #ff8a8a;
-  --color-graph-cat-org: #76d7c4;
-  --color-graph-cat-organization: #76d7c4;
-  --color-graph-cat-product: #b8b0fe;
-  --color-graph-cat-metric: #fea0c0;
-  --color-graph-cat-location: #7e9bb5;
-  --color-graph-cat-date: #f092c0;
-  --color-graph-cat-code: #5dade2;
-  --color-graph-cat-doc: #aab7b8;
-  --color-graph-cat-url: #45d6b5;
-  --color-graph-cat-email: #8e7cf7;
-  --color-graph-cat-unknown: #d5dbdb;
-  --color-graph-rel-contains: #d5dbdb;
-  --color-graph-rel-extends: #bb8fce;
-  --color-graph-rel-implements: #5dade2;
-  --color-graph-rel-imports: #eb984e;
-  --color-graph-rel-uses: #58d68d;
-  --color-graph-rel-calls: #52be80;
-  --color-graph-rel-references: #f5b041;
-  --color-graph-rel-related-to: #aab7b8;
-  --color-graph-rel-works-on: #ec7063;
-  --color-graph-rel-owns: #48c9b0;
-  --color-graph-rel-depends-on: #eb984e;
-  --color-graph-rel-parent-of: #d5dbdb;
-  --qs-content: #fff;
-  --qs-main: #fff;
-  --qs-primary-foreground: #131920;
-  --qs-secondary-foreground: #656871;
-  --qs-tertiary-foreground: #6e6e82;
-  --qs-placeholder-foreground: #8c8c94;
-  --qs-divider: #dedee3;
-  --qs-default-border: #8c8c94;
-  --qs-neutral-soft: #b4b4bb;
-  --qs-neutral-gray-50: #1e1e2a;
-  --qs-tertiary-background: #1e1e2a;
-  --qs-action-hover: #f3f3f7;
-  --qs-primary-default: #4200db;
-  --qs-primary-dark: #35009e;
-  --qs-primary-light: #e8e6ff;
-  --qs-success-default: #00802f;
-  --qs-error-default: #db0000;
-  --qs-font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
-  --safe-top: 0px;
-  --safe-bottom: 0px;
-  --safe-left: 0px;
-  --safe-right: 0px;
-  --qs-font-family: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
-  --qs-font-base-letter-spacing: .15px;
-  --qs-shadow-sm: 0 0 2px 0 #00000029, 0 0 4px 0 #00000029;
-  --qs-shadow-md: 0 0 2px 0 #00000029, 0 2px 8px 1px #00000029;
-  --qs-shadow-lg: 0 4px 16px 4px #00000029, 0 2px 6px 1px #00000029;
-  --qs-shadow-xl: 0 4px 8px 2px #00000029, 0 6px 20px 4px #00000029;
-  --qs-width-modal-sm: 384px;
-  --qs-width-modal-md: 600px;
-  --qs-width-modal-lg: 1136px;
-  --qs-grid-gap: 16px;
-  --qs-grid-gap-xl: 24px;
-  --qs-primary-medium: #8575ff;
-  --qs-primary-inverse: #fff;
-  --qs-neutral-lightest: #f9f9fb;
-  --qs-neutral-light: #f3f3f7;
-  --qs-neutral-default: #dedee3;
-  --qs-neutral-medium: #8c8c94;
-  --qs-neutral-deep: #656871;
-  --qs-neutral-dark: #333843;
-  --qs-neutral-strong: #131920;
-  --qs-neutral-white: #fff;
-  --qs-neutral-black: #000;
-  --qs-success-medium: #005c26;
-  --qs-success-dark: #00471e;
-  --qs-success-light: #d9ffd6;
-  --qs-success-inverse: #fff;
-  --qs-info-default: #006ce0;
-  --qs-info-medium: #003b8f;
-  --qs-info-dark: #002a66;
-  --qs-info-light: #d1f1ff;
-  --qs-info-inverse: #fff;
-  --qs-warning-default: #f2b100;
-  --qs-warning-medium: #db9200;
-  --qs-warning-dark: #573a00;
-  --qs-warning-light: #fffbbd;
-  --qs-warning-inverse: #573a00;
-  --qs-warning-experimental: #f2b100;
-  --qs-warning-experimental-light: #fffbbd;
-  --qs-warning-experimental-light-foreground: #fffbbd;
-  --qs-error-medium: #900;
-  --qs-error-dark: #700000;
-  --qs-error-light: #ffe0e0;
-  --qs-error-inverse: #fff;
-  --qs-connection-default: #db3300;
-  --qs-connection-soft: #ff997a;
-  --qs-connection-light: #ffe0d6;
-  --qs-connection-dark: #661800;
-  --qs-automation-default: #b3008f;
-  --qs-automation-medium: #d600ba;
-  --qs-automation-soft: #ff94f1;
-  --qs-automation-light: #ffe0fb;
-  --qs-automation-dark: #660052;
-  --qs-insight-default: #a000b8;
-  --qs-insight-soft: #f299ff;
-  --qs-insight-light: #fce6ff;
-  --qs-insight-dark: #590066;
-  --qs-visualization-default: #7300e5;
-  --qs-visualization-soft: #d4a8ff;
-  --qs-visualization-light: #f2e5ff;
-  --qs-visualization-dark: #45008a;
-  --qs-spice: #ff9800;
-  --qs-coachmark: #006ce0;
-  --qs-brand: #fff;
-  --qs-brand-foreground: #131920;
-  --qs-brand-navbar: #131920;
-  --qs-brand-navbar-foreground: #fff;
-  --qs-brand-navbar-light: #dedee3;
-  --qs-brand-navbar-dark: #000;
-  --qs-application-navbar: #4200db;
-  --qs-application-navbar-foreground: #fff;
-  --qs-application-navbar-light: #e8e6ff;
-  --qs-application-navbar-dark: #35009e;
-  --qs-dimension: #4200db;
-  --qs-dimension-foreground: #fff;
-  --qs-dimension-experimental: #4200db;
-  --qs-dimension-experimental-foreground: #4200db;
-  --qs-measure: #00802f;
-  --qs-measure-foreground: #fff;
-  --qs-measure-experimental: #f2b100;
-  --qs-measure-experimental-foreground: #f2b100;
-  --qs-content-inverse: #333843;
-  --qs-content-inverse-active: #131920;
-  --qs-secondary: #dedee3;
-  --qs-disabled: #8c8c94;
-  --qs-divider-light: #f3f3f7;
-  --qs-hover-border: #333843;
-  --qs-active-border: #4200db;
-  --qs-disabled-border: #dedee3;
-  --qs-error-border: #ffe0e0;
-  --qs-error-active-border: #db0000;
-  --qs-disabled-foreground: #b4b4bb;
-  --qs-primary-inverse-foreground: #fff;
-  --qs-error-foreground: #db0000;
-  --qs-contrast-foreground: #131920;
-  --qs-main-foreground: #131920;
-  --qs-main-secondary-foreground: #656871;
-  --qs-action-disabled: #f3f3f7;
-  --qs-action-active: #e8e6ff;
-  --qs-default-badge: #dedee3;
-  --qs-tag-default: #dedee3;
-  --qs-tag-soft-border: #b4b4bb;
-  --qs-focus-offset: 1px;
-  --qs-toggle-tile-sm: calc(.25rem * 8);
-  --qs-toggle-tile-md: calc(.25rem * 12);
-  --qs-toggle-tile-lg: calc(.25rem * 15);
-  --qs-shadow-pin-right: inset 4px 0 4px -4px #00000029;
-  --qs-shadow-pin-left: inset -4px 0 4px -4px #00000029;
-  --react-pdf-text-layer: 1;
-  --highlight-bg-color: #b400aa;
-  --highlight-selected-bg-color: #006400;
-  --react-pdf-annotation-layer: 1;
-  --annotation-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
-  --input-focus-border-color: Highlight;
-  --input-focus-outline: 1px solid Canvas;
-  --input-unfocused-border-color: transparent;
-  --input-disabled-border-color: transparent;
-  --input-hover-border-color: black;
-  --link-outline: none;
-  color-scheme: dark;
-}
-body { background: var(--color-bg); color: var(--color-text); }
-a { color: var(--color-link, var(--color-primary)); }</style>
+<html>
+<head>
 <meta charset="UTF-8">
 <title>eBay Card Listing Generator</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -542,7 +195,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   <div class="form-grid">
     <div><label>Player / Pokémon</label><input type="text" id="poke-name" placeholder="Auto-filled from search"></div>
     <div><label>Card Number</label><input type="text" id="poke-number" placeholder="e.g. #199/165"></div>
-    <div><label>Set</label><input type="text" id="poke-set" placeholder="e.g. Scarlet &amp; Violet 151"></div>
+    <div><label>Set</label><input type="text" id="poke-set" placeholder="e.g. Scarlet & Violet 151"></div>
     <div><label>Year</label><input type="text" id="poke-year" placeholder="e.g. 2023"></div>
     <div><label>Manufacturer</label><input type="text" id="poke-manufacturer" value="Pokémon"></div>
     <div><label>Rarity / Parallel</label><input type="text" id="poke-rarity" placeholder="e.g. Special Illustration Rare"></div>
@@ -647,7 +300,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   <div class="copy-row">
     <button class="btn btn-primary" onclick="copyHTML()"><i class="fa-solid fa-copy"></i> Copy Description HTML</button>
     <button class="btn btn-secondary" onclick="copyText('listing-title')"><i class="fa-solid fa-copy"></i> Copy Title</button>
-    <button class="btn btn-secondary" onclick="copyAndClear()" style="margin-left:auto;"><i class="fa-solid fa-forward"></i> Copy &amp; Next</button>
+    <button class="btn btn-secondary" onclick="copyAndClear()" style="margin-left:auto;"><i class="fa-solid fa-forward"></i> Copy & Next</button>
   </div>
 </div>
 
@@ -766,27 +419,48 @@ a { color: var(--color-link, var(--color-primary)); }</style>
         url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(fullName)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
       }
       
+      // Fetch with automatic retry (up to 3 attempts)
       let resp;
-      try {
-        resp = await fetch(url, {
-          headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
-          signal: signal
-        });
-      } catch (fetchErr) {
-        if (fetchErr.name === 'AbortError') return;
-        throw fetchErr;
+      let lastError = '';
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (thisSearchId !== currentSearchId) return;
+        try {
+          resp = await fetch(url, {
+            headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
+            signal: signal
+          });
+          if (resp.ok) break; // Success — exit retry loop
+          lastError = `API ${resp.status}`;
+          if (resp.status === 429) {
+            // Rate limited — wait and retry
+            if (attempt < 2) {
+              pokeResults.innerHTML = `<div class="search-loading">⏳ Rate limited — retrying (${attempt + 2}/3)...</div>`;
+              await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+              continue;
+            }
+            pokeResults.innerHTML = '<div class="search-loading">⏳ Rate limited — wait a moment and try again</div>';
+            return;
+          }
+          // Other HTTP errors — retry with backoff
+          if (attempt < 2) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+            continue;
+          }
+        } catch (fetchErr) {
+          if (fetchErr.name === 'AbortError') return;
+          lastError = fetchErr.message;
+          if (attempt < 2) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+            continue;
+          }
+        }
       }
       
-      // If a newer search has started, discard this result
       if (thisSearchId !== currentSearchId) return;
       
-      if (!resp.ok) {
-        // If rate limited (429), show a friendlier message
-        if (resp.status === 429) {
-          pokeResults.innerHTML = '<div class="search-loading">⏳ Rate limited — wait a moment and try again</div>';
-          return;
-        }
-        throw new Error(`API ${resp.status}`);
+      if (!resp || !resp.ok) {
+        pokeResults.innerHTML = `<div class="search-loading">Search failed after 3 attempts: ${lastError}</div>`;
+        return;
       }
 
       let data;
@@ -1309,6 +983,5 @@ ${getIncludedHTML(document.getElementById('template-preset').value)}
   }
 
 </script>
-
-
-</body></html>
+</body>
+</html>
