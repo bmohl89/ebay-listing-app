@@ -943,9 +943,16 @@ ${getIncludedHTML(document.getElementById('template-preset').value)}
         const result = await ipcRenderer.invoke('apply-update');
         
         if (result.success) {
-          status.textContent = `Updated to v${result.version}! Reloading...`;
-          btn.innerHTML = '<i class="fa-solid fa-check"></i> Done!';
-          // The main process will reload the window
+          if (result.needsRestart) {
+            status.textContent = `Updated to v${result.version}! Restarting app...`;
+            btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Restarting...';
+            setTimeout(() => ipcRenderer.invoke('restart-app'), 1500);
+          } else {
+            status.textContent = `Updated to v${result.version}! Reloading...`;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Done!';
+            updateAvailable = false;
+            // The main process will reload the window
+          }
         } else {
           status.textContent = 'Update failed: ' + (result.error || 'Unknown error');
           btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Retry';

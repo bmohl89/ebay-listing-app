@@ -19,7 +19,7 @@ function createWindow() {
     autoHideMenuBar: true
   });
 
-  // Load from the updated file if it exists, otherwise the bundled one
+  // Load from updated file if it exists, otherwise bundled
   const indexPath = updater.getIndexPath();
   mainWindow.loadFile(indexPath);
 }
@@ -34,11 +34,10 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-// Handle update check from renderer
+// Handle update check
 ipcMain.handle('check-for-update', async () => {
   try {
-    const result = await updater.checkForUpdate();
-    return result;
+    return await updater.checkForUpdate();
   } catch (err) {
     return { available: false, error: err.message };
   }
@@ -49,15 +48,26 @@ ipcMain.handle('apply-update', async () => {
   try {
     const result = await updater.applyUpdate();
     if (result.success) {
-      // Reload from the newly updated file
-      const indexPath = updater.getIndexPath();
-      mainWindow.loadFile(indexPath);
-      return { success: true, version: result.version };
+      if (result.needsRestart) {
+        // main.js or updater.js changed — full app restart needed
+        return { success: true, version: result.version, needsRestart: true };
+      } else {
+        // Only index.html changed — just reload the page
+        const indexPath = updater.getIndexPath();
+        mainWindow.loadFile(indexPath);
+        return { success: true, version: result.version, needsRestart: false };
+      }
     }
     return result;
   } catch (err) {
     return { success: false, error: err.message };
   }
+});
+
+// Handle app restart (called from renderer when needsRestart is true)
+ipcMain.handle('restart-app', () => {
+  app.relaunch();
+  app.exit(0);
 });
 
 // Get current version

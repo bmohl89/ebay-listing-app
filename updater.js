@@ -4,29 +4,36 @@ const path = require('path');
 const { app } = require('electron');
 
 // ============================================================
-// CONFIGURATION — Update these with your GitHub repo details
+// CONFIGURATION
 // ============================================================
 const GITHUB_USER = 'bmohl89';
 const GITHUB_REPO = 'ebay-listing-app';
 const BRANCH = 'main';
-const FILE_PATH = 'index.html';
 
-const RAW_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${FILE_PATH}`;
-const VERSION_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/version.txt`;
+// Files that the updater can update (ALL app files)
+const UPDATABLE_FILES = ['index.html', 'main.js', 'updater.js', 'version.txt'];
+
+function getGitHubRawURL(filename) {
+  return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${filename}`;
+}
 // ============================================================
 
-// Writable folder for updates (survives app.asar packaging)
+// Writable folder for updates
 function getUpdateDir() {
   const dir = path.join(app.getPath('userData'), 'updates');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
 
-// Returns the path to use for index.html — updated version if it exists, otherwise bundled
-function getIndexPath() {
-  const updatedPath = path.join(getUpdateDir(), 'index.html');
+// Returns path for a given file — updated version if exists, otherwise bundled
+function getFilePath(filename) {
+  const updatedPath = path.join(getUpdateDir(), filename);
   if (fs.existsSync(updatedPath)) return updatedPath;
-  return path.join(__dirname, 'index.html');
+  return path.join(__dirname, filename);
+}
+
+function getIndexPath() {
+  return getFilePath('index.html');
 }
 
 function fetchText(url) {
@@ -47,17 +54,14 @@ function fetchText(url) {
 
 function getLocalVersion() {
   try {
-    // Check writable updates folder first
     const updatedVersion = path.join(getUpdateDir(), 'version.txt');
     if (fs.existsSync(updatedVersion)) {
       return fs.readFileSync(updatedVersion, 'utf8').trim();
     }
-    // Fall back to bundled version.txt
     const bundledVersion = path.join(__dirname, 'version.txt');
     if (fs.existsSync(bundledVersion)) {
       return fs.readFileSync(bundledVersion, 'utf8').trim();
     }
-    // Fall back to package.json
     const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
     return pkg.version;
   } catch (e) {
@@ -67,7 +71,7 @@ function getLocalVersion() {
 
 async function checkForUpdate() {
   const localVersion = getLocalVersion();
-  const remoteVersion = (await fetchText(VERSION_URL)).trim();
+  const remoteVersion = (await fetchText(getGitHubRawURL('version.txt'))).trim();
   
   const isNewer = compareVersions(remoteVersion, localVersion) > 0;
   
@@ -82,16 +86,40 @@ async function checkForUpdate() {
 }
 
 async function applyUpdate() {
-  const newHTML = await fetchText(RAW_URL);
-  const newVersion = (await fetchText(VERSION_URL)).trim();
-  
   const updateDir = getUpdateDir();
+  const changedFiles = [];
   
-  // Write to the writable updates folder (NOT inside app.asar)
-  fs.writeFileSync(path.join(updateDir, 'index.html'), newHTML, 'utf8');
-  fs.writeFileSync(path.join(updateDir, 'version.txt'), newVersion, 'utf8');
+  // Download all updatable files from GitHub
+  for (const filename of UPDATABLE_FILES) {
+    try {
+      const remoteContent = await fetchText(getGitHubRawURL(filename));
+      const localPath = path.join(updateDir, filename);
+      
+      // Check if content actually changed
+      let currentContent = '';
+      try { currentContent = fs.readFileSync(localPath, 'utf8'); } catch(e) {}
+      
+      if (remoteContent !== currentContent) {
+        fs.writeFileSync(localPath, remoteContent, 'utf8');
+        changedFiles.push(filename);
+      }
+    } catch (err) {
+      console.error(`Failed to update ${filename}:`, err.message);
+      // Continue with other files even if one fails
+    }
+  }
   
-  return { success: true, version: newVersion };
+  const newVersion = (await fetchText(getGitHubRawURL('version.txt'))).trim();
+  
+  // Determine if a restart is needed (main.js or updater.js changed)
+  const needsRestart = changedFiles.some(f => f === 'main.js' || f === 'updater.js');
+  
+  return { 
+    success: true, 
+    version: newVersion, 
+    changedFiles,
+    needsRestart
+  };
 }
 
 function compareVersions(a, b) {
@@ -107,4 +135,4 @@ function compareVersions(a, b) {
   return 0;
 }
 
-module.exports = { checkForUpdate, applyUpdate, getLocalVersion, getIndexPath };
+module.exports = { checkForUpdate, applyUpdate, getLocalVersion, getIndexPath, getFilePath };
