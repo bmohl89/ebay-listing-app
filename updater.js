@@ -1,26 +1,37 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { app } = require('electron');
 
 // ============================================================
 // CONFIGURATION — Update these with your GitHub repo details
 // ============================================================
-const GITHUB_USER = 'bmohl89';   // <-- Change this
-const GITHUB_REPO = 'ebay-listing-app';       // <-- Change this if different
+const GITHUB_USER = 'bmohl89';
+const GITHUB_REPO = 'ebay-listing-app';
 const BRANCH = 'main';
 const FILE_PATH = 'index.html';
 
-// Raw GitHub URL for the latest index.html
 const RAW_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${FILE_PATH}`;
-
-// Version file URL (a simple text file with just the version number)
 const VERSION_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/version.txt`;
 // ============================================================
+
+// Writable folder for updates (survives app.asar packaging)
+function getUpdateDir() {
+  const dir = path.join(app.getPath('userData'), 'updates');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
+// Returns the path to use for index.html — updated version if it exists, otherwise bundled
+function getIndexPath() {
+  const updatedPath = path.join(getUpdateDir(), 'index.html');
+  if (fs.existsSync(updatedPath)) return updatedPath;
+  return path.join(__dirname, 'index.html');
+}
 
 function fetchText(url) {
   return new Promise((resolve, reject) => {
     https.get(url, { headers: { 'User-Agent': 'eBayListingApp' } }, (res) => {
-      // Follow redirects
       if (res.statusCode === 301 || res.statusCode === 302) {
         return fetchText(res.headers.location).then(resolve).catch(reject);
       }
@@ -36,11 +47,17 @@ function fetchText(url) {
 
 function getLocalVersion() {
   try {
-    const versionFile = path.join(__dirname, 'version.txt');
-    if (fs.existsSync(versionFile)) {
-      return fs.readFileSync(versionFile, 'utf8').trim();
+    // Check writable updates folder first
+    const updatedVersion = path.join(getUpdateDir(), 'version.txt');
+    if (fs.existsSync(updatedVersion)) {
+      return fs.readFileSync(updatedVersion, 'utf8').trim();
     }
-    // Fall back to package.json version
+    // Fall back to bundled version.txt
+    const bundledVersion = path.join(__dirname, 'version.txt');
+    if (fs.existsSync(bundledVersion)) {
+      return fs.readFileSync(bundledVersion, 'utf8').trim();
+    }
+    // Fall back to package.json
     const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
     return pkg.version;
   } catch (e) {
@@ -65,23 +82,18 @@ async function checkForUpdate() {
 }
 
 async function applyUpdate() {
-  // Download the latest index.html
   const newHTML = await fetchText(RAW_URL);
-  
-  // Download the latest version.txt
   const newVersion = (await fetchText(VERSION_URL)).trim();
   
-  // Write the new files
-  const indexPath = path.join(__dirname, 'index.html');
-  const versionPath = path.join(__dirname, 'version.txt');
+  const updateDir = getUpdateDir();
   
-  fs.writeFileSync(indexPath, newHTML, 'utf8');
-  fs.writeFileSync(versionPath, newVersion, 'utf8');
+  // Write to the writable updates folder (NOT inside app.asar)
+  fs.writeFileSync(path.join(updateDir, 'index.html'), newHTML, 'utf8');
+  fs.writeFileSync(path.join(updateDir, 'version.txt'), newVersion, 'utf8');
   
   return { success: true, version: newVersion };
 }
 
-// Simple semver comparison: returns 1 if a > b, -1 if a < b, 0 if equal
 function compareVersions(a, b) {
   const partsA = a.split('.').map(Number);
   const partsB = b.split('.').map(Number);
@@ -95,4 +107,4 @@ function compareVersions(a, b) {
   return 0;
 }
 
-module.exports = { checkForUpdate, applyUpdate, getLocalVersion };
+module.exports = { checkForUpdate, applyUpdate, getLocalVersion, getIndexPath };

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const updater = require('./updater');
@@ -19,7 +19,9 @@ function createWindow() {
     autoHideMenuBar: true
   });
 
-  mainWindow.loadFile('index.html');
+  // Load from the updated file if it exists, otherwise the bundled one
+  const indexPath = updater.getIndexPath();
+  mainWindow.loadFile(indexPath);
 }
 
 app.whenReady().then(createWindow);
@@ -47,8 +49,9 @@ ipcMain.handle('apply-update', async () => {
   try {
     const result = await updater.applyUpdate();
     if (result.success) {
-      // Reload the window with the new content
-      mainWindow.loadFile('index.html');
+      // Reload from the newly updated file
+      const indexPath = updater.getIndexPath();
+      mainWindow.loadFile(indexPath);
       return { success: true, version: result.version };
     }
     return result;
@@ -59,12 +62,5 @@ ipcMain.handle('apply-update', async () => {
 
 // Get current version
 ipcMain.handle('get-version', () => {
-  // Read from version.txt (updated by the updater) instead of package.json
-  try {
-    const versionFile = path.join(__dirname, 'version.txt');
-    if (fs.existsSync(versionFile)) {
-      return fs.readFileSync(versionFile, 'utf8').trim();
-    }
-  } catch (e) {}
-  return app.getVersion();
+  return updater.getLocalVersion();
 });
