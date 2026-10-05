@@ -287,6 +287,16 @@
   <div class="output-title-box">
     <div class="output-title-label">Suggested Listing Title (keyword-packed — editable)</div>
     <input type="text" id="listing-title" style="font-family: var(--font-mono); font-size: 14px; font-weight: 500; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px 10px; background: var(--color-bg); width: 100%;" oninput="updateTitleCounter()" maxlength="80">
+    <div class="title-counter ok" id="title-counter">0/80</div>
+  </div>
+  <!-- Template preset -->
+  <div class="preset-row">
+    <label>Template:</label>
+    <select id="template-preset" onchange="savePresetChoice()" style="width: auto; padding: 6px 10px; font-size: 12px;">
+      <option value="raw">Raw Card (Penny Sleeve + Top Loader)</option>
+      <option value="graded">Graded Card (Slab only)</option>
+      <option value="raw-semi">Raw Card (Penny Sleeve + Semi-Rigid)</option>
+    </select>
   </div>
   <div class="output-tabs">
     <div class="output-tab active" data-view="preview">Preview</div>
