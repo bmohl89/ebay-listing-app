@@ -45,7 +45,7 @@
   textarea { resize: vertical; min-height: 70px; }
   
   .search-wrapper { position: relative; }
-  .search-results { position: absolute; top: 100%; left: 0; right: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); max-height: 260px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .search-results { position: absolute; top: 100%; left: 0; right: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); max-height: 400px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
   .search-results.visible { display: block; }
   .search-item { padding: 10px 14px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--color-border-light); }
   .search-item:last-child { border-bottom: none; }
@@ -161,27 +161,29 @@
 <div class="form-section active" id="pokemon-form">
   <div class="form-grid full">
     <div>
-      <label>Search Pokémon Card (type name or number)</label>
+      <label>Search Pokémon Card</label>
       <div class="search-wrapper">
-        <input type="text" id="poke-search" placeholder="e.g. Charizard ex, Pikachu 025..." autocomplete="off">
+        <input type="text" id="poke-search" placeholder="e.g. Charizard ex, Mewtwo V, Pikachu..." autocomplete="off">
         <div class="search-results" id="poke-results"></div>
-    <div class="title-counter ok" id="title-counter">0/80</div>
-  </div>
-  <!-- Template preset -->
-  <div class="preset-row">
-    <label>Template:</label>
-    <select id="template-preset" onchange="savePresetChoice()" style="width: auto; padding: 6px 10px; font-size: 12px;">
-      <option value="raw">Raw Card (Penny Sleeve + Top Loader)</option>
-      <option value="graded">Graded Card (Slab only)</option>
-      <option value="raw-semi">Raw Card (Penny Sleeve + Semi-Rigid)</option>
-    </select>
-  </div>
-      <p class="hint">Results appear as you type — select one to auto-fill details</p>
-      <!-- Recent searches -->
-      <div class="recent-section" id="recent-section" style="display:none;">
-        <div class="recent-label">Recent Searches</div>
-        <div class="recent-chips" id="recent-chips"></div>
       </div>
+    </div>
+  </div>
+  <!-- Optional search filters -->
+  <div class="form-grid" style="margin-bottom: 8px;">
+    <div><label>Filter by Set (optional)</label><input type="text" id="poke-filter-set" placeholder="e.g. Destined Rivals, Scarlet & Violet 151..."></div>
+    <div><label>Filter by Card # (optional)</label><input type="text" id="poke-filter-number" placeholder="e.g. 150, 189/182"></div>
+  </div>
+  <div class="form-grid full" style="margin-bottom: 12px;">
+    <p class="hint">Type a name and press Enter (or wait 1.5s). Use the filters above to narrow results. Shows up to 30 cards, newest sets first.</p>
+  </div>
+  <!-- Recent searches -->
+  <div class="recent-section" id="recent-section" style="display:none;">
+    <div class="recent-label">Recent Searches</div>
+    <div class="recent-chips" id="recent-chips"></div>
+  </div>
+  <!-- Selected card display -->
+  <div class="form-grid full">
+    <div>
       <div class="selected-card" id="poke-selected">
         <img id="poke-selected-img" src="">
         <div class="selected-card-info">
@@ -401,23 +403,36 @@
       const thisSearchId = ++currentSearchId;
       const signal = abortController.signal;
 
-      let url;
-      const numberMatch = query.match(/(\d+\/?\d*)$/);
-      const pureNumber = /^\d+[\/\d]*$/.test(query.trim());
-      
-      if (pureNumber) {
-        const num = query.trim().split('/')[0];
-        url = `https://api.pokemontcg.io/v2/cards?q=number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+      // Build query from main search + optional filters
+      const parts = [];
+      const nameQuery = query.trim();
+      const filterSet = (document.getElementById('poke-filter-set')?.value || '').trim();
+      const filterNum = (document.getElementById('poke-filter-number')?.value || '').trim();
+
+      // Name query — check if it contains a number at the end (e.g., "Mewtwo 150")
+      const numberMatch = nameQuery.match(/\s+(\d+[\/\d]*)$/);
+      if (/^\d+[\/\d]*$/.test(nameQuery)) {
+        // Pure number like "150" or "189/182"
+        parts.push(`number:${nameQuery.split('/')[0]}`);
       } else if (numberMatch) {
-        const name = query.substring(0, numberMatch.index).trim().toLowerCase();
-        const num = numberMatch[1].split('/')[0];
-        url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(name)}*" number:${num}&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+        // Name + number like "Mewtwo 150"
+        const name = nameQuery.substring(0, numberMatch.index).trim();
+        parts.push(`name:"${name}*"`);
+        parts.push(`number:${numberMatch[1].split('/')[0]}`);
       } else {
-        // Always search the FULL query as the card name first.
-        // This handles "Charizard EX", "Mega Charizard", "Charizard V", "Charizard VMAX", etc.
-        const fullName = query.trim().toLowerCase();
-        url = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(fullName)}*"&pageSize=10&select=id,name,number,set,rarity,images,subtypes`;
+        // Full name search
+        parts.push(`name:"${nameQuery}*"`);
       }
+
+      // Apply optional filters
+      if (filterSet) parts.push(`set.name:"${filterSet}*"`);
+      if (filterNum && !numberMatch && !/^\d+[\/\d]*$/.test(nameQuery)) {
+        parts.push(`number:${filterNum.split('/')[0]}`);
+      }
+
+      // Sort by set release date descending (newest first) and increase results to 30
+      const q = encodeURIComponent(parts.join(' '));
+      const url = `https://api.pokemontcg.io/v2/cards?q=${q}&orderBy=-set.releaseDate&pageSize=30&select=id,name,number,set,rarity,images,subtypes`;
       
       // Fetch with automatic retry (up to 3 attempts)
       let resp;
@@ -432,7 +447,6 @@
           if (resp.ok) break; // Success — exit retry loop
           lastError = `API ${resp.status}`;
           if (resp.status === 429) {
-            // Rate limited — wait and retry
             if (attempt < 2) {
               pokeResults.innerHTML = `<div class="search-loading">⏳ Rate limited — retrying (${attempt + 2}/3)...</div>`;
               await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
@@ -441,7 +455,6 @@
             pokeResults.innerHTML = '<div class="search-loading">⏳ Rate limited — wait a moment and try again</div>';
             return;
           }
-          // Other HTTP errors — retry with backoff
           if (attempt < 2) {
             await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
             continue;
@@ -467,29 +480,17 @@
       try { data = await resp.json(); } catch(e) { throw new Error('Invalid API response'); }
       
       if (!data.data || data.data.length === 0) {
-        // Fallback: if multi-word query returned nothing, try first word only as a broader search
-        if (!pureNumber && !numberMatch && query.trim().includes(' ')) {
-          const firstName = query.trim().split(/\s+/)[0].toLowerCase();
-          const fallbackUrl = `https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(firstName)}*"&pageSize=15&select=id,name,number,set,rarity,images,subtypes`;
-          const fallbackResp = await fetch(fallbackUrl, {
-            headers: { 'X-Api-Key': '7aa5783f-509a-42e0-86c2-037dd8f77f0e' },
-            signal: signal
-          });
-          if (thisSearchId !== currentSearchId) return;
-          if (fallbackResp.ok) {
-            const fallbackData = await fallbackResp.json();
-            if (fallbackData.data && fallbackData.data.length > 0) {
-              data = fallbackData;
-            }
-          }
-        }
-        if (!data.data || data.data.length === 0) {
-          pokeResults.innerHTML = '<div class="search-loading">No results found</div>';
-          return;
-        }
+        pokeResults.innerHTML = '<div class="search-loading">No results found — try fewer filters or a different name</div>';
+        return;
       }
-
+      
       pokeResults.innerHTML = '';
+      // Show result count
+      const countDiv = document.createElement('div');
+      countDiv.style.cssText = 'padding:6px 14px;font-size:11px;color:var(--color-text-muted);border-bottom:1px solid var(--color-border-light);';
+      countDiv.textContent = `${data.data.length} result${data.data.length > 1 ? 's' : ''} (newest first)`;
+      pokeResults.appendChild(countDiv);
+
       data.data.forEach(card => {
         const div = document.createElement('div');
         div.className = 'search-item';
@@ -497,7 +498,7 @@
           <img src="${card.images?.small || ''}" alt="" loading="lazy">
           <div class="search-item-info">
             <div class="search-item-name">${card.name}</div>
-            <div class="search-item-detail">#${card.number} · ${card.set?.name || ''} · ${card.set?.releaseDate?.substring(0,4) || ''} · ${card.rarity || ''}</div>
+            <div class="search-item-detail">${card.number} · ${card.set?.name || ''} · ${card.set?.releaseDate?.substring(0,4) || ''} · ${card.rarity || ''}</div>
           </div>
         `;
         div.addEventListener('mousedown', (e) => {
@@ -510,10 +511,7 @@
       // Ignore abort errors (expected when user keeps typing)
       if (err.name === 'AbortError') return;
       
-      // Only show error if this is still the current search
-      if (currentSearchId === currentSearchId) {
-        pokeResults.innerHTML = '<div class="search-loading">API error — check your connection and try again</div>';
-      }
+      pokeResults.innerHTML = `<div class="search-loading">Search error: ${err.message}</div>`;
       console.error(err);
     }
   }
